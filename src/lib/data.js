@@ -1,10 +1,10 @@
 const url = "http://localhost:8080/api";
 
-export async function fetchOrdenesTrabajo(limit, page) {
-  const params = { limit, page };
-  const query = new URLSearchParams(params).toString();
+export async function fetchOrdenesTrabajo(limit, page, query) {
+  const params = { limit, page, ...(query && { query }) };
+  const queryString = new URLSearchParams(params).toString();
 
-  const urlFetch = `${url}/ots?${query}`;
+  const urlFetch = `${url}/ots?${queryString}`;
   try {
     const response = await fetch(urlFetch);
     if (!response.ok) {
