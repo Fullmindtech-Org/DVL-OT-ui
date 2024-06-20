@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SideBar from "./components/Sidebar";
+import OrdenesTrabajo from "./pages/OrdenesTrabajo/OrdenesTrabajo";
 
 function App() {
   return (
@@ -18,8 +19,8 @@ function App() {
                 className={`flex-grow p-4 md:overflow-y-auto md:p-8 bg-white`}
               >
                 <Routes>
-                  {/* <Route path="/" element={<Ordenes />} />
-                  <Route path="/colores/*" element={<Colores />} />
+                  <Route path="/*" element={<OrdenesTrabajo />} />
+                  {/* <Route path="/colores/*" element={<Colores />} />
                   <Route path="/prendas/*" element={<Prendas />} />
                   <Route path="/telas/*" element={<Telas />} /> */}
                 </Routes>
