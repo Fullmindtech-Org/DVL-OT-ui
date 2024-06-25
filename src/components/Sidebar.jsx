@@ -43,7 +43,7 @@ export default function SideBar() {
           </Link>
         ))}
         <div
-          className={`hidden h-auto w-full grow rounded-md bg-white md:block`}
+          className={`hidden h-auto w-full grow rounded-md bg-zinc-300 md:block`}
         ></div>
       </div>
     </div>

@@ -10,13 +10,13 @@ function App() {
           path="/"
           element={
             <div
-              className={`flex h-screen bg-white flex-col md:flex-row md:overflow-hidden`}
+              className={`flex h-screen bg-zinc-300 flex-col md:flex-row md:overflow-hidden`}
             >
               <div className="w-full flex-none md:w-64">
                 <SideBar/>
               </div>
               <div
-                className={`flex-grow p-4 md:overflow-y-auto md:p-8 bg-white`}
+                className={`flex-grow p-4 md:overflow-y-auto md:p-8 bg-zinc-300`}
               >
                 <Routes>
                   <Route path="/*" element={<OrdenesTrabajo />} />
