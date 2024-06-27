@@ -1,19 +1,31 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer, Bounce } from "react-toastify";
 import SideBar from "./components/Sidebar";
 import OrdenesTrabajo from "./pages/OrdenesTrabajo/OrdenesTrabajo";
 
 function App() {
   return (
     <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="light"
+        transition={Bounce}
+      />
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <div
               className={`flex h-screen bg-zinc-300 flex-col md:flex-row md:overflow-hidden`}
             >
               <div className="w-full flex-none md:w-64">
-                <SideBar/>
+                <SideBar />
               </div>
               <div
                 className={`flex-grow p-4 md:overflow-y-auto md:p-8 bg-zinc-300`}

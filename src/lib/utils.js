@@ -32,16 +32,15 @@ export function generatePagination(currentPage, totalPages) {
   ];
 }
 
-export function showToast(type, message, theme) {
+export function showToast(type, message) {
   const toastOptions = {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
-    pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: theme === "dark" ? "light" : "dark",
+    theme: "light",
     transition: Bounce,
   };
 

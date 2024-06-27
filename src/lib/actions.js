@@ -13,7 +13,8 @@ export async function guardarOrdenTrabajo(ordenTrabajo) {
     });
 
     if (response.status === 201) {
-      showToast("success", "Orden de trabajo guardada con éxito", "dark");
+      const data = await response.json();
+      showToast("success", `Orden de trabajo guardada con éxito, ID: ${data.id}`, "dark");
     } else {
       showToast("error", "Error al guardar la orden de trabajo", "dark");
     }

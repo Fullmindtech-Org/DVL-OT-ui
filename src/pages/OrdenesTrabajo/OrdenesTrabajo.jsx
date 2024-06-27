@@ -6,7 +6,7 @@ export default function OrdenesTrabajo() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/create" element={<Create />} />
+      <Route path="/OT/crear" element={<Create />} />
     </Routes>
   );
 }
