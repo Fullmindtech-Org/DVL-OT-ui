@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchOrdenesTrabajo } from "../lib/data";
-import { showToast } from "../lib/utils";
+import { fetchOrdenTrabajo, fetchOrdenesTrabajo } from "../lib/data";
+import { generateAndDownloadPDF, showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -29,6 +29,11 @@ export function TablaOT({ limit, currentPage, query }) {
 
   const handleDelete = (id) => {
     console.log("Delete", id, setUpdate);
+  };
+
+  const handleGeneratePDF = async (id) => {
+    const ot = await fetchOrdenTrabajo(id);
+    generateAndDownloadPDF(ot);
   };
 
   return (
@@ -186,7 +191,7 @@ export function TablaOT({ limit, currentPage, query }) {
                       </button>
                       <button
                         className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
-                        onClick={() => handleDelete(ot.orden_trabajo_id)}
+                        onClick={() => handleGeneratePDF(ot.orden_trabajo_id)}
                       >
                         <i className="ri-file-pdf-fill text-xl" />
                       </button>
