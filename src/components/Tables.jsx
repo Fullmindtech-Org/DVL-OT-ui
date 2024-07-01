@@ -81,7 +81,7 @@ export function TablaOT({ limit, currentPage, query }) {
                   </div>
                   <div className="flex justify-end gap-2">
                     <Link
-                      to={`/update/${ot.orden_trabajo_id}`}
+                      to={`OT/actualizar/${ot.orden_trabajo_id}`}
                       className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
                     >
                       <i className="ri-pencil-line text-xl" />
@@ -94,7 +94,7 @@ export function TablaOT({ limit, currentPage, query }) {
                     </button>
                     <button
                       className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
-                      onClick={() => handleDelete(ot.orden_trabajo_id)}
+                      onClick={() => handleGeneratePDF(ot.orden_trabajo_id)}
                     >
                       <i className="ri-file-pdf-fill text-xl" />
                     </button>
@@ -178,7 +178,7 @@ export function TablaOT({ limit, currentPage, query }) {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-2">
                       <Link
-                        to={`/update/${ot.orden_trabajo_id}`}
+                        to={`OT/actualizar/${ot.orden_trabajo_id}`}
                         className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
                       >
                         <i className="ri-pencil-line text-xl" />

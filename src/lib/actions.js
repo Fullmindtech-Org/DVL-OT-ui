@@ -23,9 +23,9 @@ export async function guardarOrdenTrabajo(ordenTrabajo) {
   }
 }
 
-export async function modificarOrdenTrabajo(ordenTrabajo) {
+export async function modificarOrdenTrabajo(id, ordenTrabajo) {
   try {
-    const response = await fetch(`${url}/ots/${ordenTrabajo.id}`, {
+    const response = await fetch(`${url}/ots/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

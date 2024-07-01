@@ -1,8 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { fetchColores, fetchPrendas, fetchTelas } from "../lib/data";
+import {
+  fetchColores,
+  fetchOrdenTrabajo,
+  fetchPrendas,
+  fetchTelas,
+} from "../lib/data";
 import { Link } from "react-router-dom";
-import { guardarOrdenTrabajo } from "../lib/actions";
+import { guardarOrdenTrabajo, modificarOrdenTrabajo } from "../lib/actions";
+import PropTypes from "prop-types";
+import { showToast } from "../lib/utils";
 
 const talles = [
   "38",
@@ -38,11 +45,12 @@ const talles = [
   "12",
 ];
 
-export function FormOT() {
+export function FormOT({ mode, otId }) {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    setValue,
   } = useForm();
   const [prendas, setPrendas] = useState([]);
   const [colores, setColores] = useState([]);
@@ -53,8 +61,45 @@ export function FormOT() {
   const today = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data) => {
-    await guardarOrdenTrabajo(data);
+    if (mode === "update") {
+      await modificarOrdenTrabajo(otId, data);
+    } else {
+      await guardarOrdenTrabajo(data);
+    }
   };
+
+  useEffect(() => {
+    const fetchAndSetValues = async () => {
+      if (mode === "update" && otId) {
+        try {
+          const ot = await fetchOrdenTrabajo(otId);
+          const fechaCreacionFormatted = ot.fecha_creacion.split("T")[0];
+          const fechaProbableEntregaFormatted =
+            ot.fecha_probable_entrega.split("T")[0];
+
+          setValue("fecha", fechaCreacionFormatted);
+          setValue("fecha_probable_entrega", fechaProbableEntregaFormatted);
+          setValue("cliente", ot.cliente);
+          setValue("prioridad", ot.prioridad);
+          setValue("id_prenda", ot.id_prenda);
+          setValue("cantidad", ot.cantidad);
+          setValue("id_color", ot.id_color);
+          setValue("id_tela", ot.id_tela);
+          setValue("talle", ot.talle);
+          setValue("cinta_reflectiva", ot.cinta_reflectiva);
+          setValue("logo_frente", ot.logo_frente);
+          setValue("logo_espalda", ot.logo_espalda);
+          setValue("cinta_reflectiva", ot.cinta_reflectiva === 1);
+          setValue("logo_frente", ot.logo_frente === 1);
+          setValue("logo_espalda", ot.logo_espalda === 1);
+        } catch (error) {
+          showToast("error", "Error al obtener la orden de trabajo");
+        }
+      }
+    };
+
+    fetchAndSetValues();
+  }, [mode, otId, setValue]);
 
   useEffect(() => {
     if (!hasFetchedPrendas.current) {
@@ -322,10 +367,17 @@ export function FormOT() {
             type="submit"
             className="bg-mainColor rounded-lg p-2 text-black hover:bg-orange-300 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            Guardar Orden de Trabajo
+            {mode === "update"
+              ? "Actualizar Orden de Trabajo"
+              : "Guardar Orden de Trabajo"}
           </button>
         </div>
       </form>
     </div>
   );
 }
+
+FormOT.propTypes = {
+  mode: PropTypes.string,
+  otId: PropTypes.string,
+};
