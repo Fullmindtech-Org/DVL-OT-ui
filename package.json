@@ -17,6 +17,7 @@
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
     "remixicon": "^4.3.0",
+    "sweetalert2": "^11.12.1",
     "use-debounce": "^10.0.1"
   },
   "devDependencies": {

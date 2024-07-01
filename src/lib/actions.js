@@ -43,14 +43,14 @@ export async function modificarOrdenTrabajo(id, ordenTrabajo) {
   }
 }
 
-export async function eliminarOrdenTrabajo(id) {
+export async function eliminarOrdenTrabajo(id, setUpdate, update) {
   try {
     const response = await fetch(`${url}/ots/${id}`, {
       method: "DELETE",
     });
 
     if (response.status === 200) {
-      showToast("success", "Orden de trabajo eliminada con éxito", "dark");
+      setUpdate(!update);
     } else {
       showToast("error", "Error al eliminar la orden de trabajo", "dark");
     }

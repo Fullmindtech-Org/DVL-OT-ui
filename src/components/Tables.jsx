@@ -3,6 +3,8 @@ import { fetchOrdenTrabajo, fetchOrdenesTrabajo } from "../lib/data";
 import { generateAndDownloadPDF, showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { eliminarOrdenTrabajo } from "../lib/actions";
+import Swal from "sweetalert2";
 
 export function TablaOT({ limit, currentPage, query }) {
   const [OT, setOT] = useState(null);
@@ -28,7 +30,24 @@ export function TablaOT({ limit, currentPage, query }) {
   }, [limit, currentPage, query, update]);
 
   const handleDelete = (id) => {
-    console.log("Delete", id, setUpdate);
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarOrdenTrabajo(id, setUpdate, update);
+        Swal.fire({
+          title: "Borrado!",
+          text: "La orden de trabajo ha sido eliminada.",
+          icon: "success"
+        });
+      }
+    });
   };
 
   const handleGeneratePDF = async (id) => {
