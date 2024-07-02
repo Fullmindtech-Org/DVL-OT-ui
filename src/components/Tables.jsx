@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchOrdenTrabajo, fetchOrdenesTrabajo } from "../lib/data";
+import { fetchColor, fetchColores, fetchOrdenTrabajo, fetchOrdenesTrabajo } from "../lib/data";
 import { generateAndDownloadPDF, showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { eliminarOrdenTrabajo } from "../lib/actions";
+import { eliminarColor, eliminarOrdenTrabajo, modificarColor } from "../lib/actions";
 import Swal from "sweetalert2";
 
 export function TablaOT({ limit, currentPage, query }) {
@@ -37,14 +37,14 @@ export function TablaOT({ limit, currentPage, query }) {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Si, borrar!"
+      confirmButtonText: "Si, borrar!",
     }).then((result) => {
       if (result.isConfirmed) {
         eliminarOrdenTrabajo(id, setUpdate, update);
         Swal.fire({
           title: "Borrado!",
           text: "La orden de trabajo ha sido eliminada.",
-          icon: "success"
+          icon: "success",
         });
       }
     });
@@ -225,6 +225,145 @@ export function TablaOT({ limit, currentPage, query }) {
     </div>
   );
 }
+
+export function TablaColores({ limit, currentPage, update, setUpdate }) {
+  const [colores, setColores] = useState(null);
+
+  useEffect(() => {
+    fetchColores(limit, currentPage)
+      .then((data) => {
+        if (data && data.rows) {
+          setColores(data.rows);
+        } else {
+          showToast(
+            "error",
+            "Error al obtener los datos, recargue la página",
+            "dark"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        showToast("error", error, "dark");
+      });
+  }, [limit, currentPage, update]);
+
+  const handleEdit = (id) => {
+    fetchColor(id).then((data) => {
+      const nombreActualDelColor = data[0].color_nombre;
+  
+      Swal.fire({
+        title: `Actualizar el nombre del color`,
+        input: "text",
+        inputValue: nombreActualDelColor,
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Actualizar",
+        showLoaderOnConfirm: true,
+        preConfirm: async (nuevoNombre) => {
+          await modificarColor({ id: id, nombre: nuevoNombre }, setUpdate, update);
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: `El color se actualizó correctamente a ${result.value}`,
+          });
+        }
+      }).catch((error) => {
+        Swal.fire({
+          title: `Error al actualizar el color: ${error}`,
+          icon: "error",
+        });
+      });
+    }).catch((error) => {
+      showToast("error", error, "dark");
+    });
+  }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarColor(id, setUpdate, update);
+        Swal.fire({
+          title: "Borrado!",
+          text: "El color ha sido eliminado.",
+          icon: "success",
+        });
+      }
+    });
+  }
+
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
+          <table className="min-w-full text-black">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+                  Código Color
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Color
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-color">
+              {colores?.map((color) => (
+                <tr
+                  key={color.color_id}
+                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    {color.color_id}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{color.color_nombre}</td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleEdit(color.color_id)}
+                      >
+                        <i className="ri-pencil-line text-xl" />
+                      </button>
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleDelete(color.color_id)}
+                      >
+                        <i className="ri-delete-bin-line text-xl" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+TablaColores.propTypes = {
+  limit: PropTypes.number,
+  currentPage: PropTypes.number,
+  update: PropTypes.bool,
+  setUpdate: PropTypes.func,
+};
 
 TablaOT.propTypes = {
   query: PropTypes.string,

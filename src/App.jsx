@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer, Bounce } from "react-toastify";
 import SideBar from "./components/Sidebar";
 import OrdenesTrabajo from "./pages/OrdenesTrabajo/OrdenesTrabajo";
+import Colores from "./pages/Colores/Colores";
 
 function App() {
   return (
@@ -32,8 +33,8 @@ function App() {
               >
                 <Routes>
                   <Route path="/*" element={<OrdenesTrabajo />} />
-                  {/* <Route path="/colores/*" element={<Colores />} />
-                  <Route path="/prendas/*" element={<Prendas />} />
+                  <Route path="/colores/*" element={<Colores />} />
+                  {/* <Route path="/prendas/*" element={<Prendas />} />
                   <Route path="/telas/*" element={<Telas />} /> */}
                 </Routes>
               </div>

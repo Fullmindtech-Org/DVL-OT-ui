@@ -59,7 +59,7 @@ export async function eliminarOrdenTrabajo(id, setUpdate, update) {
   }
 }
 
-export async function guardarColor(color) {
+export async function guardarColor(color, setUpdate, update) {
   try {
     const response = await fetch(`${url}/colores`, {
       method: "POST",
@@ -71,15 +71,17 @@ export async function guardarColor(color) {
 
     if (response.status === 201) {
       showToast("success", "Color guardado con éxito", "dark");
+      setUpdate(!update);
     } else {
-      showToast("error", "Error al guardar el color", "dark");
+      const data = await response.json();
+      showToast("error", data.error, "dark");
     }
   } catch (error) {
-    showToast("error", "Error al guardar el color", "dark");
+    showToast("error", error, "dark");
   }
 }
 
-export async function modificarColor(color) {
+export async function modificarColor(color, setUpdate, update) {
   try {
     const response = await fetch(`${url}/colores/${color.id}`, {
       method: "PUT",
@@ -91,22 +93,24 @@ export async function modificarColor(color) {
 
     if (response.status === 200) {
       showToast("success", "Color modificado con éxito", "dark");
+      setUpdate(!update);
     } else {
-      showToast("error", "Error al modificar el color", "dark");
+      const data = await response.json();
+      showToast("error", data.error, "dark");
     }
   } catch (error) {
     showToast("error", "Error al modificar el color", "dark");
   }
 }
 
-export async function eliminarColor(id) {
+export async function eliminarColor(id, setUpdate, update) {
   try {
     const response = await fetch(`${url}/colores/${id}`, {
       method: "DELETE",
     });
 
     if (response.status === 200) {
-      showToast("success", "Color eliminado con éxito", "dark");
+      setUpdate(!update);
     } else {
       showToast("error", "Error al eliminar el color", "dark");
     }
