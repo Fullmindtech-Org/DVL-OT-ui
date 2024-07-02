@@ -6,6 +6,8 @@ import {
   fetchOrdenesTrabajo,
   fetchPrenda,
   fetchPrendas,
+  fetchTela,
+  fetchTelas,
 } from "../lib/data";
 import { generateAndDownloadPDF, showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
@@ -14,8 +16,10 @@ import {
   eliminarColor,
   eliminarOrdenTrabajo,
   eliminarPrenda,
+  eliminarTela,
   modificarColor,
   modificarPrenda,
+  modificarTela,
 } from "../lib/actions";
 import Swal from "sweetalert2";
 
@@ -496,6 +500,142 @@ export function TablaPrendas({ limit, currentPage, update, setUpdate }) {
     </div>
   );
 }
+
+export function TablaTelas({ limit, currentPage, update, setUpdate }) {
+  const [telas, setTelas] = useState(null);
+
+  useEffect(() => {
+    fetchTelas(limit, currentPage)
+      .then((data) => {
+        if (data && data.rows) {
+          setTelas(data.rows);
+        } else {
+          showToast(
+            "error",
+            "Error al obtener los datos, recargue la página",
+            "dark"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        showToast("error", error, "dark");
+      });
+  }, [limit, currentPage, update]);
+
+  const handleEdit = (id) => {
+    fetchTela(id)
+      .then((data) => {
+        const nombreActualDeTela = data[0].tela_nombre;
+
+        Swal.fire({
+          title: `Actualizar el nombre de la tela`,
+          input: "text",
+          inputValue: nombreActualDeTela,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: async (nuevoNombre) => {
+            await modificarTela(
+              { id: id, nombre: nuevoNombre },
+              setUpdate,
+              update
+            );
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
+      })
+      .catch((error) => {
+        showToast("error", error, "dark");
+      });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarTela(id, setUpdate, update);
+        Swal.fire({
+          title: "Borrado!",
+          text: "La prenda ha sido eliminado.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
+          <table className="min-w-full text-black">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+                  Código Tela
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Tela
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-color">
+              {telas?.map((tela) => (
+                <tr
+                  key={tela.tela_id}
+                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    {tela.tela_id}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {tela.tela_nombre}
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleEdit(tela.tela_id)}
+                      >
+                        <i className="ri-pencil-line text-xl" />
+                      </button>
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleDelete(tela.tela_id)}
+                      >
+                        <i className="ri-delete-bin-line text-xl" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+TablaTelas.propTypes = {
+  limit: PropTypes.number,
+  currentPage: PropTypes.number,
+  update: PropTypes.bool,
+  setUpdate: PropTypes.func,
+};
 
 TablaPrendas.propTypes = {
   limit: PropTypes.number,
