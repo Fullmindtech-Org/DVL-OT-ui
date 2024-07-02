@@ -38,13 +38,7 @@ export default function Home() {
         await guardarColor({ nombre: color }, setUpdate, update);
       },
       allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: `Se creo el color ${result.value}`,
-        });
-      }
-    });
+    })
   }
 
   return (

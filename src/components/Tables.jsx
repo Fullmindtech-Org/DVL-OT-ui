@@ -266,18 +266,7 @@ export function TablaColores({ limit, currentPage, update, setUpdate }) {
           await modificarColor({ id: id, nombre: nuevoNombre }, setUpdate, update);
         },
         allowOutsideClick: () => !Swal.isLoading()
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: `El color se actualizó correctamente a ${result.value}`,
-          });
-        }
-      }).catch((error) => {
-        Swal.fire({
-          title: `Error al actualizar el color: ${error}`,
-          icon: "error",
-        });
-      });
+      })
     }).catch((error) => {
       showToast("error", error, "dark");
     });
