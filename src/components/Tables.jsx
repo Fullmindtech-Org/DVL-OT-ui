@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
-import { fetchColor, fetchColores, fetchOrdenTrabajo, fetchOrdenesTrabajo } from "../lib/data";
+import {
+  fetchColor,
+  fetchColores,
+  fetchOrdenTrabajo,
+  fetchOrdenesTrabajo,
+  fetchPrenda,
+  fetchPrendas,
+} from "../lib/data";
 import { generateAndDownloadPDF, showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { eliminarColor, eliminarOrdenTrabajo, modificarColor } from "../lib/actions";
+import {
+  eliminarColor,
+  eliminarOrdenTrabajo,
+  eliminarPrenda,
+  modificarColor,
+  modificarPrenda,
+} from "../lib/actions";
 import Swal from "sweetalert2";
 
 export function TablaOT({ limit, currentPage, query }) {
@@ -249,28 +262,34 @@ export function TablaColores({ limit, currentPage, update, setUpdate }) {
   }, [limit, currentPage, update]);
 
   const handleEdit = (id) => {
-    fetchColor(id).then((data) => {
-      const nombreActualDelColor = data[0].color_nombre;
-  
-      Swal.fire({
-        title: `Actualizar el nombre del color`,
-        input: "text",
-        inputValue: nombreActualDelColor,
-        inputAttributes: {
-          autocapitalize: "off"
-        },
-        showCancelButton: true,
-        confirmButtonText: "Actualizar",
-        showLoaderOnConfirm: true,
-        preConfirm: async (nuevoNombre) => {
-          await modificarColor({ id: id, nombre: nuevoNombre }, setUpdate, update);
-        },
-        allowOutsideClick: () => !Swal.isLoading()
+    fetchColor(id)
+      .then((data) => {
+        const nombreActualDelColor = data[0].color_nombre;
+
+        Swal.fire({
+          title: `Actualizar el nombre del color`,
+          input: "text",
+          inputValue: nombreActualDelColor,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: async (nuevoNombre) => {
+            await modificarColor(
+              { id: id, nombre: nuevoNombre },
+              setUpdate,
+              update
+            );
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
       })
-    }).catch((error) => {
-      showToast("error", error, "dark");
-    });
-  }
+      .catch((error) => {
+        showToast("error", error, "dark");
+      });
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -291,7 +310,7 @@ export function TablaColores({ limit, currentPage, update, setUpdate }) {
         });
       }
     });
-  }
+  };
 
   return (
     <div className="mt-6 flow-root">
@@ -320,7 +339,9 @@ export function TablaColores({ limit, currentPage, update, setUpdate }) {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     {color.color_id}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">{color.color_nombre}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {color.color_nombre}
+                  </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-2">
                       <button
@@ -346,6 +367,142 @@ export function TablaColores({ limit, currentPage, update, setUpdate }) {
     </div>
   );
 }
+
+export function TablaPrendas({ limit, currentPage, update, setUpdate }) {
+  const [prendas, setPrendas] = useState(null);
+
+  useEffect(() => {
+    fetchPrendas(limit, currentPage)
+      .then((data) => {
+        if (data && data.rows) {
+          setPrendas(data.rows);
+        } else {
+          showToast(
+            "error",
+            "Error al obtener los datos, recargue la página",
+            "dark"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        showToast("error", error, "dark");
+      });
+  }, [limit, currentPage, update]);
+
+  const handleEdit = (id) => {
+    fetchPrenda(id)
+      .then((data) => {
+        const nombreActualDePrenda = data[0].prenda_nombre;
+
+        Swal.fire({
+          title: `Actualizar el nombre de la prenda`,
+          input: "text",
+          inputValue: nombreActualDePrenda,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: async (nuevoNombre) => {
+            await modificarPrenda(
+              { id: id, nombre: nuevoNombre },
+              setUpdate,
+              update
+            );
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
+      })
+      .catch((error) => {
+        showToast("error", error, "dark");
+      });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarPrenda(id, setUpdate, update);
+        Swal.fire({
+          title: "Borrado!",
+          text: "La prenda ha sido eliminado.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
+          <table className="min-w-full text-black">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+                  Código Prenda
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Prenda
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-color">
+              {prendas?.map((prenda) => (
+                <tr
+                  key={prenda.prenda_id}
+                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    {prenda.prenda_id}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {prenda.prenda_nombre}
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleEdit(prenda.prenda_id)}
+                      >
+                        <i className="ri-pencil-line text-xl" />
+                      </button>
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleDelete(prenda.prenda_id)}
+                      >
+                        <i className="ri-delete-bin-line text-xl" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+TablaPrendas.propTypes = {
+  limit: PropTypes.number,
+  currentPage: PropTypes.number,
+  update: PropTypes.bool,
+  setUpdate: PropTypes.func,
+};
 
 TablaColores.propTypes = {
   limit: PropTypes.number,

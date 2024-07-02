@@ -119,7 +119,7 @@ export async function eliminarColor(id, setUpdate, update) {
   }
 }
 
-export async function guardarPrenda(prenda) {
+export async function guardarPrenda(prenda, setUpdate, update) {
   try {
     const response = await fetch(`${url}/prendas`, {
       method: "POST",
@@ -130,6 +130,7 @@ export async function guardarPrenda(prenda) {
     });
 
     if (response.status === 201) {
+      setUpdate(!update);
       showToast("success", "Prenda guardada con éxito", "dark");
     } else {
       showToast("error", "Error al guardar la prenda", "dark");
@@ -139,7 +140,7 @@ export async function guardarPrenda(prenda) {
   }
 }
 
-export async function modificarPrenda(prenda) {
+export async function modificarPrenda(prenda, setUpdate, update) {
   try {
     const response = await fetch(`${url}/prendas/${prenda.id}`, {
       method: "PUT",
@@ -150,6 +151,7 @@ export async function modificarPrenda(prenda) {
     });
 
     if (response.status === 200) {
+      setUpdate(!update);
       showToast("success", "Prenda modificada con éxito", "dark");
     } else {
       showToast("error", "Error al modificar la prenda", "dark");
@@ -159,13 +161,14 @@ export async function modificarPrenda(prenda) {
   }
 }
 
-export async function eliminarPrenda(id) {
+export async function eliminarPrenda(id, setUpdate, update) {
   try {
     const response = await fetch(`${url}/prendas/${id}`, {
       method: "DELETE",
     });
 
     if (response.status === 200) {
+      setUpdate(!update);
       showToast("success", "Prenda eliminada con éxito", "dark");
     } else {
       showToast("error", "Error al eliminar la prenda", "dark");
@@ -175,7 +178,7 @@ export async function eliminarPrenda(id) {
   }
 }
 
-export async function guardarTela(tela) {
+export async function guardarTela(tela, setUpdate, update) {
   try {
     const response = await fetch(`${url}/telas`, {
       method: "POST",
@@ -186,6 +189,7 @@ export async function guardarTela(tela) {
     });
 
     if (response.status === 201) {
+      setUpdate(!update);
       showToast("success", "Tela guardada con éxito", "dark");
     } else {
       showToast("error", "Error al guardar la tela", "dark");
@@ -195,7 +199,7 @@ export async function guardarTela(tela) {
   }
 }
 
-export async function modificarTela(tela) {
+export async function modificarTela(tela, setUpdate, update) {
   try {
     const response = await fetch(`${url}/telas/${tela.id}`, {
       method: "PUT",
@@ -206,6 +210,7 @@ export async function modificarTela(tela) {
     });
 
     if (response.status === 200) {
+      setUpdate(!update);
       showToast("success", "Tela modificada con éxito", "dark");
     } else {
       showToast("error", "Error al modificar la tela", "dark");
@@ -215,13 +220,14 @@ export async function modificarTela(tela) {
   }
 }
 
-export async function eliminarTela(id) {
+export async function eliminarTela(id, setUpdate, update) {
   try {
     const response = await fetch(`${url}/telas/${id}`, {
       method: "DELETE",
     });
 
     if (response.status === 200) {
+      setUpdate(!update);
       showToast("success", "Tela eliminada con éxito", "dark");
     } else {
       showToast("error", "Error al eliminar la tela", "dark");
