@@ -1,4 +1,6 @@
-const url = "http://localhost:8080/api";
+const url = import.meta.env.VITE_REACT_APP_URL_API;
+
+console.log(url)
 
 export async function fetchOrdenesTrabajo(limit, page, query) {
   const params = { limit, page, ...(query && { query }) };
