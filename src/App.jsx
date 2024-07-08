@@ -5,6 +5,8 @@ import OrdenesTrabajo from "./pages/OrdenesTrabajo/OrdenesTrabajo";
 import Colores from "./pages/Colores/Colores";
 import Prendas from "./pages/Prendas/Prendas";
 import Telas from "./pages/Telas/Telas";
+import { PDFViewer } from "@react-pdf/renderer";
+import PDF from "./components/PDF";
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/PDF" element={<PDFViewer style={{ width: '100%', height: '100vh' }}><PDF/></PDFViewer>} />
       </Routes>
     </BrowserRouter>
   );
