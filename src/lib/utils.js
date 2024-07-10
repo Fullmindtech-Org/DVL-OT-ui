@@ -1,5 +1,4 @@
 import { toast, Bounce } from "react-toastify";
-import { saveAs } from "file-saver";
 
 export function generatePagination(currentPage, totalPages) {
   if (totalPages <= 7) {
@@ -49,27 +48,5 @@ export function showToast(type, message) {
     toast.success(message, toastOptions);
   } else if (type === "error") {
     toast.error(message, toastOptions);
-  }
-}
-
-export async function generateAndDownloadPDF(ot) {
-  try {
-    fetch("http://localhost:8080/generar-pdf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ot),
-    })
-      .then((response) => {
-        return response.blob();
-      })
-      .then((blob) => {
-        saveAs(blob, `${ot.orden_trabajo_id}.pdf`);
-      })
-      .catch((error) => console.error("Error:", error));
-  } catch (error) {
-    console.error("Error generating or downloading PDF:", error);
-    showToast("error", "Error al generar el PDF");
   }
 }
