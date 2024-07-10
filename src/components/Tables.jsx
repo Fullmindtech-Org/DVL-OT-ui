@@ -9,7 +9,7 @@ import {
   fetchTela,
   fetchTelas,
 } from "../lib/data";
-import { generateAndDownloadPDF, showToast } from "../lib/utils";
+import { showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
@@ -22,6 +22,9 @@ import {
   modificarTela,
 } from "../lib/actions";
 import Swal from "sweetalert2";
+import ReactPDF from "@react-pdf/renderer";
+import PDF from "./PDF";
+import { saveAs } from "file-saver";
 
 export function TablaOT({ limit, currentPage, query }) {
   const [OT, setOT] = useState(null);
@@ -69,7 +72,8 @@ export function TablaOT({ limit, currentPage, query }) {
 
   const handleGeneratePDF = async (id) => {
     const ot = await fetchOrdenTrabajo(id);
-    generateAndDownloadPDF(ot);
+    const blob = await ReactPDF.pdf(<PDF ot={ot} />).toBlob();
+    saveAs(blob, `${id}.pdf`);
   };
 
   return (
