@@ -392,7 +392,7 @@ export function FormOT({ mode, otId }) {
           onClick={() => append({})}
           className="text-blue-500"
         >
-          Añadir Pedido
+          Añadir nuevo lote
         </button>
 
         <div className="w-full flex justify-end gap-2 mt-8">

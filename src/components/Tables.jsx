@@ -112,13 +112,6 @@ export function TablaOT({ limit, currentPage, query }) {
                   </span>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">
-                      {ot.prenda_nombre} de {ot.tela_nombre} {ot.color_nombre} -
-                      Talle {ot.talle}
-                    </p>
-                    <p>Cantidad: {ot.cantidad}</p>
-                  </div>
                   <div className="flex justify-end gap-2">
                     <Link
                       to={`OT/actualizar/${ot.orden_trabajo_id}`}
@@ -204,17 +197,6 @@ export function TablaOT({ limit, currentPage, query }) {
                       {ot.prioridad}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {ot.prenda_nombre}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {ot.color_nombre}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {ot.tela_nombre}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">{ot.talle}</td>
-                  <td className="whitespace-nowrap px-3 py-3">{ot.cantidad}</td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-2">
                       <Link
