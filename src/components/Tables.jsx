@@ -72,6 +72,7 @@ export function TablaOT({ limit, currentPage, query }) {
 
   const handleGeneratePDF = async (id) => {
     const ot = await fetchOrdenTrabajo(id);
+
     const blob = await ReactPDF.pdf(<PDF ot={ot} />).toBlob();
     saveAs(blob, `${id}.pdf`);
   };
@@ -152,19 +153,19 @@ export function TablaOT({ limit, currentPage, query }) {
                   Prioridad
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Prenda
+                  Temp
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Color
+                  Temp
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Tela
+                  Temp
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Talle
+                  Temp
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Cant.
+                  Temp
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   <span className="sr-only">Acciones</span>
@@ -184,6 +185,7 @@ export function TablaOT({ limit, currentPage, query }) {
                   <td className="whitespace-nowrap px-3 py-3">
                     {new Date(ot.fecha_probable_entrega).toLocaleDateString()}
                   </td>
+
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs text-black ${
@@ -197,6 +199,12 @@ export function TablaOT({ limit, currentPage, query }) {
                       {ot.prioridad}
                     </span>
                   </td>
+                  {/*Estos están para ser futuros nuevos campos*/}
+                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  {/*Estos están para ser futuros nuevos campos*/}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-2">
                       <Link

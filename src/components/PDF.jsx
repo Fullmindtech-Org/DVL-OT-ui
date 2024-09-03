@@ -223,112 +223,23 @@ function PDF({ ot }) {
                   )}
                 </Text>
               </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={[styles.tableColHeader40, { width: "100%" }]}>
-                <Text style={styles.tableCellHeader}>PRENDA</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableColHeader40}>
-                <Text style={styles.tableCellHeader}>TIPO</Text>
-              </View>
-              <View style={styles.tableCol60}>
-                <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
-                  {ot.prenda_nombre}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableColHeader40}>
-                <Text style={styles.tableCellHeader}>CANTIDAD</Text>
-              </View>
-              <View style={styles.tableCol60}>
-                <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
-                  {ot.cantidad}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View
-                style={[
-                  styles.tableColHeader40,
-                  {
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                ]}
-              >
-                <Text style={styles.tableCellHeader}>CARACTERÍSTICAS</Text>
-              </View>
-              <View style={[styles.tableCol60, { padding: 0, paddingLeft: 0 }]}>
-                <View style={styles.nestedTable}>
-                  <View style={styles.tableRow}>
-                    <View style={styles.nestedTableColHeader}>
-                      <Text style={styles.tableCellHeader}>
-                        CINTA REFLECTIVA
-                      </Text>
-                    </View>
-                    <View style={styles.nestedTableCol}>
-                      <Text style={[styles.tableCell, styles.boldText]}>
-                        {ot.cinta_reflectiva === 1 ? "SÍ" : "NO"}
-                      </Text>
-                    </View>
+
+              {ot.pedidos.map((pedido, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <View style={styles.tableColHeader40}>
+                    <Text style={styles.tableCell}>{pedido.prenda_nombre}</Text>
                   </View>
-                  <View style={styles.tableRow}>
-                    <View style={styles.nestedTableColHeader}>
-                      <Text style={styles.tableCellHeader}>LOGO FRENTE</Text>
-                    </View>
-                    <View style={styles.nestedTableCol}>
-                      <Text style={[styles.tableCell, styles.boldText]}>
-                        {ot.logo_frente === 1 ? "SÍ" : "NO"}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.tableRow}>
-                    <View style={styles.nestedTableColHeader}>
-                      <Text style={styles.tableCellHeader}>LOGO ATRAS</Text>
-                    </View>
-                    <View style={styles.nestedTableCol}>
-                      <Text style={[styles.tableCell, styles.boldText]}>
-                        {ot.logo_espalda === 1 ? "SÍ" : "NO"}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.tableRow}>
-                    <View style={styles.nestedTableColHeader}>
-                      <Text style={styles.tableCellHeader}>COLOR</Text>
-                    </View>
-                    <View style={styles.nestedTableCol}>
-                      <Text style={styles.tableCell}>{ot.color_nombre}</Text>
-                    </View>
-                  </View>
-                  <View style={styles.tableRow}>
-                    <View style={styles.nestedTableColHeader}>
-                      <Text style={styles.tableCellHeader}>TELA</Text>
-                    </View>
-                    <View style={styles.nestedTableCol}>
-                      <Text style={styles.tableCell}>{ot.tela_nombre}</Text>
-                    </View>
-                  </View>
-                  <View style={styles.tableRow}>
-                    <View
-                      style={[
-                        styles.nestedTableColHeader,
-                        { borderBottomWidth: 0 },
-                      ]}
-                    >
-                      <Text style={styles.tableCellHeader}>TALLE</Text>
-                    </View>
-                    <View
-                      style={[styles.nestedTableCol, { borderBottomWidth: 0 }]}
-                    >
-                      <Text style={styles.tableCell}>{ot.talle}</Text>
-                    </View>
+                  <View style={styles.tableCol60}>
+                    <Text style={styles.tableCell}>
+                      Cantidad: {pedido.cantidad}, Color: {pedido.color_nombre},
+                      Talle: {pedido.talle}, Tela: {pedido.tela_nombre}, Cinta
+                      Reflectiva: {pedido.cinta_reflectiva ? "Sí" : "No"}, Logo
+                      Frente: {pedido.logo_frente ? "Sí" : "No"}, Logo Espalda:{" "}
+                      {pedido.logo_espalda ? "Sí" : "No"}
+                    </Text>
                   </View>
                 </View>
-              </View>
+              ))}
             </View>
           </View>
         </View>
