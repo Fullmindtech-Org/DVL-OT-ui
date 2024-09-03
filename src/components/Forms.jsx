@@ -86,6 +86,7 @@ export function FormOT({ mode, otId }) {
           setValue("fecha_probable_entrega", fechaProbableEntregaFormatted);
           setValue("cliente", ot.cliente);
           setValue("prioridad", ot.prioridad);
+          remove();
           ot.pedidos.forEach((pedido) => {
             append({
               id_prenda: pedido.id_prenda,
@@ -105,7 +106,7 @@ export function FormOT({ mode, otId }) {
     };
 
     fetchAndSetValues();
-  }, [mode, otId, setValue, append]);
+  }, [mode, otId, setValue, append, remove]);
 
   useEffect(() => {
     if (!hasFetchedPrendas.current) {
@@ -219,7 +220,7 @@ export function FormOT({ mode, otId }) {
               <span className="text-zinc-600 text-xs mb-1">Prenda</span>
               <select
                 id={`pedidos[${index}].id_prenda`}
-                defaultValue={field.id_prenda}
+                defaultValue={field.id_prenda || ""}
                 {...register(`pedidos[${index}].id_prenda`, { required: true })}
                 className="py-[12px] px-[20px] w-full rounded-lg"
               >
@@ -243,7 +244,7 @@ export function FormOT({ mode, otId }) {
               <input
                 type="number"
                 id={`pedidos[${index}].cantidad`}
-                defaultValue={field.cantidad}
+                defaultValue={field.cantidad || ""}
                 {...register(`pedidos[${index}].cantidad`, {
                   required: true,
                   min: 1,
@@ -267,7 +268,7 @@ export function FormOT({ mode, otId }) {
               <span className="text-zinc-600 text-xs mb-1">Color</span>
               <select
                 id={`pedidos[${index}].id_color`}
-                defaultValue={field.id_color}
+                defaultValue={field.id_color || ""}
                 {...register(`pedidos[${index}].id_color`, { required: true })}
                 className="py-[12px] px-[20px] w-full rounded-lg"
               >
@@ -290,7 +291,7 @@ export function FormOT({ mode, otId }) {
               <span className="text-zinc-600 text-xs mb-1">Tela</span>
               <select
                 id={`pedidos[${index}].id_tela`}
-                defaultValue={field.id_tela}
+                defaultValue={field.id_tela || ""}
                 {...register(`pedidos[${index}].id_tela`, { required: true })}
                 className="py-[12px] px-[20px] w-full rounded-lg"
               >
@@ -313,7 +314,7 @@ export function FormOT({ mode, otId }) {
               <span className="text-zinc-600 text-xs mb-1">Talle</span>
               <select
                 id={`pedidos[${index}].talle`}
-                defaultValue={field.talle}
+                defaultValue={field.talle || ""}
                 {...register(`pedidos[${index}].talle`, { required: true })}
                 className="py-[12px] px-[20px] w-full rounded-lg"
               >
@@ -332,6 +333,7 @@ export function FormOT({ mode, otId }) {
                 </span>
               )}
             </div>
+            <div></div>
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -380,7 +382,7 @@ export function FormOT({ mode, otId }) {
             <button
               type="button"
               onClick={() => remove(index)}
-              className="text-red-500"
+              className="border-2 border-mainColor text-black py-2 px-4 rounded-lg bg-transparent hover:border-red-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Eliminar
             </button>
