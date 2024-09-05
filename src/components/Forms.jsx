@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { guardarOrdenTrabajo, modificarOrdenTrabajo } from "../lib/actions";
 import PropTypes from "prop-types";
 import { showToast } from "../lib/utils";
+import React from "react";
 
 const talles = [
   "38",
@@ -87,12 +88,13 @@ export function FormOT({ mode, otId }) {
           setValue("cliente", ot.cliente);
           setValue("prioridad", ot.prioridad);
           remove();
+
           ot.pedidos.forEach((pedido) => {
             append({
-              id_prenda: pedido.id_prenda,
+              id_prenda: pedido.prenda_id,
+              id_color: pedido.color_id,
+              id_tela: pedido.tela_id,
               cantidad: pedido.cantidad,
-              id_color: pedido.id_color,
-              id_tela: pedido.id_tela,
               talle: pedido.talle,
               cinta_reflectiva: pedido.cinta_reflectiva === 1,
               logo_frente: pedido.logo_frente === 1,
@@ -214,181 +216,149 @@ export function FormOT({ mode, otId }) {
         </div>
 
         {/* acá empiezo a cambiar*/}
-        {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-3 gap-2 items-start">
-            <div className="flex flex-col justify-center items-start">
-              <span className="text-zinc-600 text-xs mb-1">Prenda</span>
-              <select
-                id={`pedidos[${index}].id_prenda`}
-                defaultValue={field.id_prenda || ""}
-                {...register(`pedidos[${index}].id_prenda`, { required: true })}
-                className="py-[12px] px-[20px] w-full rounded-lg"
-              >
-                <option value="" disabled>
-                  Seleccione una opción...
-                </option>
-                {prendas.map((prenda) => (
-                  <option key={prenda.prenda_id} value={prenda.prenda_id}>
-                    {prenda.prenda_nombre}
+        <div>
+          {/*columnas*/}
+          <div className="grid grid-cols-10 gap-2 items-center bg-zinc-200 p-2 rounded-lg">
+            {/* Encabezados*/}
+            <span className="text-zinc-600 text-xs font-bold">Prenda</span>
+            <span className="text-zinc-600 text-xs font-bold">Cantidad</span>
+            <span className="text-zinc-600 text-xs font-bold">Color</span>
+            <span className="text-zinc-600 text-xs font-bold">Tela</span>
+            <span className="text-zinc-600 text-xs font-bold">Talle</span>
+            <span className="text-zinc-600 text-xs font-bold">
+              Cinta Reflectiva
+            </span>
+            <span className="text-zinc-600 text-xs font-bold">Logo Frente</span>
+            <span className="text-zinc-600 text-xs font-bold">
+              Logo Espalda
+            </span>
+            <span className="text-zinc-600 text-xs font-bold">Acciones</span>
+            <br />
+            {/* Filas de pedidos */}
+            {fields.map((field, index) => (
+              <React.Fragment key={field.id}>
+                <select
+                  id={`pedidos[${index}].id_prenda`}
+                  defaultValue={field.id_prenda || ""}
+                  {...register(`pedidos[${index}].id_prenda`, {
+                    required: true,
+                  })}
+                  className="py-[12px] px-[20px] w-full rounded-lg"
+                >
+                  <option value="" disabled>
+                    Seleccione una opción...
                   </option>
-                ))}
-              </select>
-              {errors.pedidos?.[index]?.id_prenda && (
-                <span className="text-red-500 text-xs italic">
-                  Este campo es obligatorio
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col justify-center items-start">
-              <span className="text-zinc-600 text-xs mb-1">Cantidad</span>
-              <input
-                type="number"
-                id={`pedidos[${index}].cantidad`}
-                defaultValue={field.cantidad || ""}
-                {...register(`pedidos[${index}].cantidad`, {
-                  required: true,
-                  min: 1,
-                })}
-                className="py-[12px] px-[20px] w-full rounded-lg"
-                placeholder="Ingrese la cantidad"
-                onChange={(e) => {
-                  e.target.value = Math.max(
-                    1,
-                    parseInt(e.target.value)
-                  ).toString();
-                }}
-              />
-              {errors.pedidos?.[index]?.cantidad && (
-                <span className="text-red-500 text-xs italic">
-                  Este campo es obligatorio y debe ser mayor que 0
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col justify-center items-start">
-              <span className="text-zinc-600 text-xs mb-1">Color</span>
-              <select
-                id={`pedidos[${index}].id_color`}
-                defaultValue={field.id_color || ""}
-                {...register(`pedidos[${index}].id_color`, { required: true })}
-                className="py-[12px] px-[20px] w-full rounded-lg"
-              >
-                <option value="" disabled>
-                  Seleccione una opción...
-                </option>
-                {colores.map((color) => (
-                  <option key={color.color_id} value={color.color_id}>
-                    {color.color_nombre}
+                  {prendas.map((prenda) => (
+                    <option key={prenda.prenda_id} value={prenda.prenda_id}>
+                      {prenda.prenda_nombre}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  id={`pedidos[${index}].cantidad`}
+                  defaultValue={field.cantidad || ""}
+                  {...register(`pedidos[${index}].cantidad`, {
+                    required: true,
+                    min: 1,
+                  })}
+                  className="py-[12px] px-[20px] w-full rounded-lg"
+                  placeholder="Ingrese la cantidad"
+                  onChange={(e) => {
+                    e.target.value = Math.max(
+                      1,
+                      parseInt(e.target.value)
+                    ).toString();
+                  }}
+                />
+                <select
+                  id={`pedidos[${index}].id_color`}
+                  defaultValue={field.id_color || ""}
+                  {...register(`pedidos[${index}].id_color`, {
+                    required: true,
+                  })}
+                  className="py-[12px] px-[20px] w-full rounded-lg"
+                >
+                  <option value="" disabled>
+                    Seleccione una opción...
                   </option>
-                ))}
-              </select>
-              {errors.pedidos?.[index]?.id_color && (
-                <span className="text-red-500 text-xs italic">
-                  Este campo es obligatorio
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col justify-center items-start">
-              <span className="text-zinc-600 text-xs mb-1">Tela</span>
-              <select
-                id={`pedidos[${index}].id_tela`}
-                defaultValue={field.id_tela || ""}
-                {...register(`pedidos[${index}].id_tela`, { required: true })}
-                className="py-[12px] px-[20px] w-full rounded-lg"
-              >
-                <option value="" disabled>
-                  Seleccione una opción...
-                </option>
-                {telas.map((tela) => (
-                  <option key={tela.tela_id} value={tela.tela_id}>
-                    {tela.tela_nombre}
+                  {colores.map((color) => (
+                    <option key={color.color_id} value={color.color_id}>
+                      {color.color_nombre}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  id={`pedidos[${index}].id_tela`}
+                  defaultValue={field.id_tela || ""}
+                  {...register(`pedidos[${index}].id_tela`, { required: true })}
+                  className="py-[12px] px-[20px] w-full rounded-lg"
+                >
+                  <option value="" disabled>
+                    Seleccione una opción...
                   </option>
-                ))}
-              </select>
-              {errors.pedidos?.[index]?.id_tela && (
-                <span className="text-red-500 text-xs italic">
-                  Este campo es obligatorio
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col justify-center items-start">
-              <span className="text-zinc-600 text-xs mb-1">Talle</span>
-              <select
-                id={`pedidos[${index}].talle`}
-                defaultValue={field.talle || ""}
-                {...register(`pedidos[${index}].talle`, { required: true })}
-                className="py-[12px] px-[20px] w-full rounded-lg"
-              >
-                <option value="" disabled>
-                  Seleccione una opción...
-                </option>
-                {talles.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
+                  {telas.map((tela) => (
+                    <option key={tela.tela_id} value={tela.tela_id}>
+                      {tela.tela_nombre}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  id={`pedidos[${index}].talle`}
+                  defaultValue={field.talle || ""}
+                  {...register(`pedidos[${index}].talle`, { required: true })}
+                  className="py-[12px] px-[20px] w-full rounded-lg"
+                >
+                  <option value="" disabled>
+                    Seleccione una opción...
                   </option>
-                ))}
-              </select>
-              {errors.pedidos?.[index]?.talle && (
-                <span className="text-red-500 text-xs italic">
-                  Este campo es obligatorio
-                </span>
-              )}
-            </div>
-            <div></div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id={`pedidos[${index}].cinta_reflectiva`}
-                defaultChecked={field.cinta_reflectiva}
-                {...register(`pedidos[${index}].cinta_reflectiva`)}
-                className="mr-2"
-              />
-              <label
-                htmlFor={`pedidos[${index}].cinta_reflectiva`}
-                className="text-black"
-              >
-                Cinta reflectiva
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id={`pedidos[${index}].logo_frente`}
-                defaultChecked={field.logo_frente}
-                {...register(`pedidos[${index}].logo_frente`)}
-                className="mr-2"
-              />
-              <label
-                htmlFor={`pedidos[${index}].logo_frente`}
-                className="text-black"
-              >
-                Logo frente
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id={`pedidos[${index}].logo_espalda`}
-                defaultChecked={field.logo_espalda}
-                {...register(`pedidos[${index}].logo_espalda`)}
-                className="mr-2"
-              />
-              <label
-                htmlFor={`pedidos[${index}].logo_espalda`}
-                className="text-black"
-              >
-                Logo espalda
-              </label>
-            </div>
-            <button
-              type="button"
-              onClick={() => remove(index)}
-              className="border-2 border-mainColor text-black py-2 px-4 rounded-lg bg-transparent hover:border-red-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              Eliminar
-            </button>
+                  {talles.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`pedidos[${index}].cinta_reflectiva`}
+                    defaultChecked={field.cinta_reflectiva}
+                    {...register(`pedidos[${index}].cinta_reflectiva`)}
+                    className="mr-2"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`pedidos[${index}].logo_frente`}
+                    defaultChecked={field.logo_frente}
+                    {...register(`pedidos[${index}].logo_frente`)}
+                    className="mr-2"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`pedidos[${index}].logo_espalda`}
+                    defaultChecked={field.logo_espalda}
+                    {...register(`pedidos[${index}].logo_espalda`)}
+                    className="mr-2"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="border-2 border-mainColor text-black py-2 px-4 rounded-lg bg-transparent hover:border-red-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  Eliminar
+                </button>
+                <br />
+              </React.Fragment>
+            ))}
           </div>
-        ))}
-        {/*boton test*/}
+        </div>
+
+        {/*boton Lote*/}
         <button
           type="button"
           onClick={() => append({})}

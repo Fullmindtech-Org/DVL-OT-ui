@@ -153,19 +153,19 @@ export function TablaOT({ limit, currentPage, query }) {
                   Prioridad
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Temp
+                  {/* Temp */}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Temp
+                  {/* Temp */}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Temp
+                  {/* Temp */}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Temp
+                  {/* Temp */}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Temp
+                  {/* Temp */}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   <span className="sr-only">Acciones</span>
