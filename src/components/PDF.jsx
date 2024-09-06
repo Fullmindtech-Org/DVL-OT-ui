@@ -223,148 +223,130 @@ function PDF({ ot }) {
                   )}
                 </Text>
               </View>
-
-              {ot.pedidos.map((pedido, index) => (
-                <View key={index} style={styles.tableRow}>
-                  {/* Header */}
+            </View>
+            {ot.pedidos.map((pedido, index) => (
+              <>
+                <View style={styles.tableRow}>
                   <View style={[styles.tableColHeader40, { width: "100%" }]}>
                     <Text style={styles.tableCellHeader}>PRENDA</Text>
                   </View>
-                  <View style={styles.tableRow}>
-                    <View style={styles.tableColHeader40}>
-                      <Text style={styles.tableCellHeader}>TIPO</Text>
-                    </View>
-                    <View style={styles.tableCol60}>
-                      <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
-                        {pedido.prenda_nombre}
-                      </Text>
-                    </View>
+                </View>
+                <View style={styles.tableRow}>
+                  <View style={styles.tableColHeader40}>
+                    <Text style={styles.tableCellHeader}>TIPO</Text>
                   </View>
-                  {/* CANTIDAD */}
-                  <View style={styles.tableRow}>
-                    <View style={styles.tableColHeader40}>
-                      <Text style={styles.tableCellHeader}>CANTIDAD</Text>
-                    </View>
-                    <View style={styles.tableCol60}>
-                      <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
-                        {pedido.cantidad}
-                      </Text>
-                    </View>
+                  <View style={styles.tableCol60}>
+                    <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
+                      {pedido.prenda_nombre}
+                    </Text>
                   </View>
-                  {/* CARACTERISTICAS */}
-                  <View style={styles.tableRow}>
-                    <View
-                      style={[
-                        styles.tableColHeader40,
-                        {
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        },
-                      ]}
-                    >
-                      <Text style={styles.tableCellHeader}>
-                        CARACTERÍSTICAS
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.tableCol60,
-                        { padding: 0, paddingLeft: 0 },
-                      ]}
-                    >
-                      <View style={styles.nestedTable}>
-                        {/* CINTA */}
-                        <View style={styles.tableRow}>
-                          <View style={styles.nestedTableColHeader}>
-                            <Text style={styles.tableCellHeader}>
-                              CINTA REFLECTIVA
-                            </Text>
-                          </View>
-                          <View style={styles.nestedTableCol}>
-                            <Text style={[styles.tableCell, styles.boldText]}>
-                              {pedido.cinta_reflectiva ? "SÍ" : "NO"}
-                            </Text>
-                          </View>
-                        </View>
+                </View>
+                <View style={styles.tableRow}>
+                  <View style={styles.tableColHeader40}>
+                    <Text style={styles.tableCellHeader}>CANTIDAD</Text>
+                  </View>
+                  <View style={styles.tableCol60}>
+                    <Text style={[styles.tableCell, { fontWeight: "bold" }]}>
+                      {pedido.cantidad}
+                    </Text>
+                  </View>
+                </View>
 
-                        {/* Front Logo */}
-                        <View style={styles.tableRow}>
-                          <View style={styles.nestedTableColHeader}>
-                            <Text style={styles.tableCellHeader}>
-                              LOGO FRENTE
-                            </Text>
-                          </View>
-                          <View style={styles.nestedTableCol}>
-                            <Text style={[styles.tableCell, styles.boldText]}>
-                              {pedido.logo_frente ? "SÍ" : "NO"}
-                            </Text>
-                          </View>
+                {/*CARATERISTICAS*/}
+                <View style={styles.tableRow}>
+                  <View
+                    style={[
+                      styles.tableColHeader40,
+                      {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      },
+                    ]}
+                  >
+                    <Text style={styles.tableCellHeader}>CARACTERÍSTICAS</Text>
+                  </View>
+                  <View
+                    style={[styles.tableCol60, { padding: 0, paddingLeft: 0 }]}
+                  >
+                    <View style={styles.nestedTable}>
+                      <View style={styles.tableRow}>
+                        <View style={styles.nestedTableColHeader}>
+                          <Text style={styles.tableCellHeader}>
+                            CINTA REFLECTIVA
+                          </Text>
                         </View>
-
-                        {/* Back Logo */}
-                        <View style={styles.tableRow}>
-                          <View style={styles.nestedTableColHeader}>
-                            <Text style={styles.tableCellHeader}>
-                              LOGO ESPALDA
-                            </Text>
-                          </View>
-                          <View style={styles.nestedTableCol}>
-                            <Text style={[styles.tableCell, styles.boldText]}>
-                              {pedido.logo_espalda ? "SÍ" : "NO"}
-                            </Text>
-                          </View>
+                        <View style={styles.nestedTableCol}>
+                          <Text style={[styles.tableCell, styles.boldText]}>
+                            {pedido.cinta_reflectiva === 1 ? "SÍ" : "NO"}
+                          </Text>
                         </View>
-
-                        {/* COLOR */}
-                        <View style={styles.tableRow}>
-                          <View style={styles.nestedTableColHeader}>
-                            <Text style={styles.tableCellHeader}>COLOR</Text>
-                          </View>
-                          <View style={styles.nestedTableCol}>
-                            <Text style={styles.tableCell}>
-                              {pedido.color_nombre}
-                            </Text>
-                          </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <View style={styles.nestedTableColHeader}>
+                          <Text style={styles.tableCellHeader}>
+                            LOGO FRENTE
+                          </Text>
                         </View>
-
-                        {/* TELA */}
-                        <View style={styles.tableRow}>
-                          <View style={styles.nestedTableColHeader}>
-                            <Text style={styles.tableCellHeader}>TELA</Text>
-                          </View>
-                          <View style={styles.nestedTableCol}>
-                            <Text style={styles.tableCell}>
-                              {pedido.tela_nombre}
-                            </Text>
-                          </View>
+                        <View style={styles.nestedTableCol}>
+                          <Text style={[styles.tableCell, styles.boldText]}>
+                            {pedido.logo_frente === 1 ? "SÍ" : "NO"}
+                          </Text>
                         </View>
-
-                        {/* TALLE */}
-                        <View style={styles.tableRow}>
-                          <View
-                            style={[
-                              styles.nestedTableColHeader,
-                              { borderBottomWidth: 0 },
-                            ]}
-                          >
-                            <Text style={styles.tableCellHeader}>TALLE</Text>
-                          </View>
-                          <View
-                            style={[
-                              styles.nestedTableCol,
-                              { borderBottomWidth: 0 },
-                            ]}
-                          >
-                            <Text style={styles.tableCell}>{pedido.talle}</Text>
-                          </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <View style={styles.nestedTableColHeader}>
+                          <Text style={styles.tableCellHeader}>LOGO ATRAS</Text>
+                        </View>
+                        <View style={styles.nestedTableCol}>
+                          <Text style={[styles.tableCell, styles.boldText]}>
+                            {pedido.logo_espalda === 1 ? "SÍ" : "NO"}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <View style={styles.nestedTableColHeader}>
+                          <Text style={styles.tableCellHeader}>COLOR</Text>
+                        </View>
+                        <View style={styles.nestedTableCol}>
+                          <Text style={styles.tableCell}>
+                            {pedido.color_nombre}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <View style={styles.nestedTableColHeader}>
+                          <Text style={styles.tableCellHeader}>TELA</Text>
+                        </View>
+                        <View style={styles.nestedTableCol}>
+                          <Text style={styles.tableCell}>
+                            {pedido.tela_nombre}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <View
+                          style={[
+                            styles.nestedTableColHeader,
+                            { borderBottomWidth: 0 },
+                          ]}
+                        >
+                          <Text style={styles.tableCellHeader}>TALLE</Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.nestedTableCol,
+                            { borderBottomWidth: 0 },
+                          ]}
+                        >
+                          <Text style={styles.tableCell}>{pedido.talle}</Text>
                         </View>
                       </View>
                     </View>
                   </View>
                 </View>
-              ))}
-            </View>
+              </>
+            ))}
           </View>
         </View>
         <View style={styles.process}>
