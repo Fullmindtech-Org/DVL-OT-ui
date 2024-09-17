@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const WAIT_BETWEEN_CHANGE = 500;
 
@@ -9,16 +9,16 @@ export default function Search({ placeholder }) {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("query") || "");
 
   const handleSearch = useDebouncedCallback((term) => {
     if (term) {
-      searchParams.set('query', term);
+      searchParams.set("query", term);
     } else {
-      searchParams.delete('query');
+      searchParams.delete("query");
     }
 
-    searchParams.set('page', '1');
+    searchParams.set("page", "1");
 
     navigate(`${location.pathname}?${searchParams.toString()}`);
   }, WAIT_BETWEEN_CHANGE);
