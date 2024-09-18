@@ -9,6 +9,8 @@ const links = [
   },
   { name: "Prendas", path: "/prendas", icon: "ri-shirt-line" },
   { name: "Telas", path: "/telas", icon: "ri-file-paper-2-line" },
+  { name: "Talles", path: "/talles", icon: "ri-hashtag" },
+  { name: "Cintas", path: "/cintas", icon: "ri-bookmark-line" },
 ];
 
 export default function SideBar() {
@@ -20,7 +22,9 @@ export default function SideBar() {
         to="/"
         className={`"mb-2 flex h-20 items-center rounded-md p-4 md:h-40"`}
       >
-        <div className={`flex flex-row items-center leading-none text-black gap-2`}>
+        <div
+          className={`flex flex-row items-center leading-none text-black gap-2`}
+        >
           <img
             src={"/logo_dvl.webp"}
             className="h-20 md:h-20 rounded-full"

@@ -153,7 +153,7 @@ export function TablaOT({ limit, currentPage, query }) {
                   Prioridad
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
+                  Fecha Creación
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   {/* Temp */}
@@ -200,7 +200,14 @@ export function TablaOT({ limit, currentPage, query }) {
                     </span>
                   </td>
                   {/*Estos están para ser futuros nuevos campos*/}
-                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {" "}
+                    {new Date(ot.fecha_creacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   <td className="whitespace-nowrap px-3 py-3"></td>

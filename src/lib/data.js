@@ -123,3 +123,34 @@ export async function fetchTela(id) {
     console.error("Error fetching data", error);
   }
 }
+
+export async function fetchTalles(limit, page) {
+  const params = { limit, page };
+  const query = new URLSearchParams(params).toString();
+
+  const urlFetch = `${url}/talles?${query}`;
+  try {
+    const response = await fetch(urlFetch);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+  }
+}
+
+export async function fetchTalle(id) {
+  const urlFetch = `${url}/talles/${id}`;
+  try {
+    const response = await fetch(urlFetch);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+  }
+}
