@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { TablaTelas } from "../../../components/Tables";
+import { TablaTalles } from "../../../components/Tables";
 import { fetchTalles } from "../../../lib/data";
 import Pagination from "../../../components/Pagination";
 import Swal from "sweetalert2";
@@ -26,7 +26,7 @@ export default function Home() {
 
   const handleCreate = () => {
     Swal.fire({
-      title: "Ingresa el nombre del color que deseas crear",
+      title: "Ingresa el nombre del talle que deseas crear",
       input: "text",
       inputAttributes: {
         autocapitalize: "off",
@@ -35,7 +35,7 @@ export default function Home() {
       confirmButtonText: "Crear",
       showLoaderOnConfirm: true,
       preConfirm: async (color) => {
-        await guardarTalle({ nombre: color }, setUpdate, update);
+        await guardarTalle({ talle: color }, setUpdate, update);
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
@@ -55,7 +55,7 @@ export default function Home() {
           <i className="ri-add-fill md:ml-4 text-2xl" />
         </button>
       </div>
-      <TablaTelas
+      <TablaTalles
         limit={limit}
         currentPage={Number(page)}
         update={update}

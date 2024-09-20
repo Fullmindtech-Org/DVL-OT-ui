@@ -4,6 +4,7 @@ import {
   fetchColores,
   fetchOrdenTrabajo,
   fetchPrendas,
+  fetchTalles,
   fetchTelas,
 } from "../lib/data";
 import { Link } from "react-router-dom";
@@ -11,40 +12,6 @@ import { guardarOrdenTrabajo, modificarOrdenTrabajo } from "../lib/actions";
 import PropTypes from "prop-types";
 import { showToast } from "../lib/utils";
 import React from "react";
-
-const talles = [
-  "38",
-  "40",
-  "42",
-  "44",
-  "46",
-  "48",
-  "50",
-  "52",
-  "54",
-  "56",
-  "58",
-  "60",
-  "62",
-  "64",
-  "66",
-  "68",
-  "70",
-  "72",
-  "74",
-  "76",
-  "S",
-  "M",
-  "L",
-  "XL",
-  "2XL",
-  "3XL",
-  "4XL",
-  "5XL",
-  "8",
-  "10",
-  "12",
-];
 
 export function FormOT({ mode, otId }) {
   const {
@@ -61,9 +28,11 @@ export function FormOT({ mode, otId }) {
   const [prendas, setPrendas] = useState([]);
   const [colores, setColores] = useState([]);
   const [telas, setTelas] = useState([]);
+  const [talles, setTalles] = useState([]);
   const hasFetchedPrendas = useRef(false);
   const hasFetchedColores = useRef(false);
   const hasFetchedTelas = useRef(false);
+  const hasFetchedTalles = useRef(false);
   const today = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data) => {
@@ -132,6 +101,14 @@ export function FormOT({ mode, otId }) {
       fetchTelas(1000, 1).then((data) => {
         if (data && data.rows) {
           setTelas(data.rows);
+        }
+      });
+    }
+    if (!hasFetchedTalles.current) {
+      hasFetchedTalles.current = true;
+      fetchTalles(1000, 1).then((data) => {
+        if (data && data.rows) {
+          setTalles(data.rows);
         }
       });
     }
@@ -313,8 +290,8 @@ export function FormOT({ mode, otId }) {
                     Seleccione una opción...
                   </option>
                   {talles.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
+                    <option key={option.talle_id} value={option.talle_nombre}>
+                      {option.talle_nombre}
                     </option>
                   ))}
                 </select>
