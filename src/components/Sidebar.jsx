@@ -10,7 +10,7 @@ const links = [
   { name: "Prendas", path: "/prendas", icon: "ri-shirt-line" },
   { name: "Telas", path: "/telas", icon: "ri-file-paper-2-line" },
   { name: "Talles", path: "/talles", icon: "ri-hashtag" },
-  { name: "Cintas", path: "/cintas", icon: "ri-bookmark-line" },
+  // { name: "Cintas", path: "/cintas", icon: "ri-bookmark-line" },
 ];
 
 export default function SideBar() {
