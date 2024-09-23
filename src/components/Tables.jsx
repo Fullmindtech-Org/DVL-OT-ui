@@ -6,6 +6,8 @@ import {
   fetchOrdenesTrabajo,
   fetchPrenda,
   fetchPrendas,
+  fetchTalle,
+  fetchTalles,
   fetchTela,
   fetchTelas,
 } from "../lib/data";
@@ -16,9 +18,11 @@ import {
   eliminarColor,
   eliminarOrdenTrabajo,
   eliminarPrenda,
+  eliminarTalle,
   eliminarTela,
   modificarColor,
   modificarPrenda,
+  modificarTalle,
   modificarTela,
 } from "../lib/actions";
 import Swal from "sweetalert2";
@@ -153,7 +157,7 @@ export function TablaOT({ limit, currentPage, query }) {
                   Prioridad
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
+                  Fecha Creación
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   {/* Temp */}
@@ -200,7 +204,14 @@ export function TablaOT({ limit, currentPage, query }) {
                     </span>
                   </td>
                   {/*Estos están para ser futuros nuevos campos*/}
-                  <td className="whitespace-nowrap px-3 py-3"></td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {" "}
+                    {new Date(ot.fecha_creacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
@@ -623,6 +634,142 @@ export function TablaTelas({ limit, currentPage, update, setUpdate }) {
     </div>
   );
 }
+
+export function TablaTalles({ limit, currentPage, update, setUpdate }) {
+  const [talles, setTalles] = useState(null);
+
+  useEffect(() => {
+    fetchTalles(limit, currentPage)
+      .then((data) => {
+        if (data && data.rows) {
+          setTalles(data.rows);
+        } else {
+          showToast(
+            "error",
+            "Error al obtener los datos, recargue la página",
+            "dark"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        showToast("error", error.message, "dark");
+      });
+  }, [limit, currentPage, update]);
+
+  {
+    /* TENGO QUE ESTABLECER UN LIMITE DE 5 CARACTERES O SE CAE TODO */
+  }
+  const handleEdit = (id) => {
+    fetchTalle(id)
+      .then((data) => {
+        const nombreActualDeTalle = data[0].talle_nombre;
+
+        Swal.fire({
+          title: `Actualizar el nombre del talle`,
+          input: "text",
+          inputValue: nombreActualDeTalle,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: (nuevoNombre) => {
+            return modificarTalle(
+              { id: id, talle: nuevoNombre },
+              setUpdate,
+              update
+            );
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
+      })
+      .catch((error) => {
+        showToast("error", error.message, "dark");
+      });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarTalle(id, setUpdate, update).then(() => {
+          Swal.fire("Borrado!", "El talle ha sido eliminado.", "success");
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
+          <table className="min-w-full text-black">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+                  Código Talle
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Talle
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-color">
+              {talles?.map((talle) => (
+                <tr
+                  key={talle.talle_id}
+                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    {talle.talle_id}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {talle.talle_nombre}
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleEdit(talle.talle_id)}
+                      >
+                        <i className="ri-pencil-line text-xl" />
+                      </button>
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleDelete(talle.talle_id)}
+                      >
+                        <i className="ri-delete-bin-line text-xl" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+TablaTalles.propTypes = {
+  limit: PropTypes.number,
+  currentPage: PropTypes.number,
+  update: PropTypes.bool,
+  setUpdate: PropTypes.func,
+};
 
 TablaTelas.propTypes = {
   limit: PropTypes.number,

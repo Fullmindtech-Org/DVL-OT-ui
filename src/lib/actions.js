@@ -14,7 +14,11 @@ export async function guardarOrdenTrabajo(ordenTrabajo) {
 
     if (response.status === 201) {
       const data = await response.json();
-      showToast("success", `Orden de trabajo guardada con éxito, ID: ${data.id}`, "dark");
+      showToast(
+        "success",
+        `Orden de trabajo guardada con éxito, ID: ${data.id}`,
+        "dark"
+      );
     } else {
       showToast("error", "Error al guardar la orden de trabajo", "dark");
     }
@@ -234,5 +238,64 @@ export async function eliminarTela(id, setUpdate, update) {
     }
   } catch (error) {
     showToast("error", "Error al eliminar la tela", "dark");
+  }
+}
+
+export async function guardarTalle(talle, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/talles`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(talle),
+    });
+
+    if (response.status === 201) {
+      setUpdate(!update);
+      showToast("success", "Talle guardado con éxito", "dark");
+    } else {
+      showToast("error", "Error al guardar el talle", "dark");
+    }
+  } catch (error) {
+    showToast("error", "Error al guardar el talle", "dark");
+  }
+}
+
+export async function modificarTalle(talle, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/talles/${talle.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(talle),
+    });
+
+    if (response.status === 200) {
+      setUpdate(!update);
+      showToast("success", "Talle modificado con éxito", "dark");
+    } else {
+      showToast("error", "Error al modificar el talle", "dark");
+    }
+  } catch (error) {
+    showToast("error", "Error al modificar el talle", "dark");
+  }
+}
+
+export async function eliminarTalle(id, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/talles/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.status === 200) {
+      setUpdate(!update);
+      showToast("success", "Talle eliminado con éxito", "dark");
+    } else {
+      showToast("error", "Error al eliminar el talle", "dark");
+    }
+  } catch (error) {
+    showToast("error", "Error al eliminar el talle", "dark");
   }
 }

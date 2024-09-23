@@ -5,6 +5,7 @@ import OrdenesTrabajo from "./pages/OrdenesTrabajo/OrdenesTrabajo";
 import Colores from "./pages/Colores/Colores";
 import Prendas from "./pages/Prendas/Prendas";
 import Telas from "./pages/Telas/Telas";
+import Talles from "./pages/Talles/Talles";
 
 function App() {
   return (
@@ -24,7 +25,9 @@ function App() {
         <Route
           path="*"
           element={
-            <div className={`flex flex-col h-screen bg-zinc-300 justify-between`}>
+            <div
+              className={`flex flex-col h-screen bg-zinc-300 justify-between`}
+            >
               <div className="flex flex-col md:flex-row md:overflow-hidden">
                 <div className="w-full flex-none md:w-64">
                   <SideBar />
@@ -37,6 +40,8 @@ function App() {
                     <Route path="/colores/*" element={<Colores />} />
                     <Route path="/prendas/*" element={<Prendas />} />
                     <Route path="/telas/*" element={<Telas />} />
+                    <Route path="/talles/*" element={<Talles />} />
+                    <Route path="/cintas/*" element={<Telas />} />
                   </Routes>
                 </div>
               </div>

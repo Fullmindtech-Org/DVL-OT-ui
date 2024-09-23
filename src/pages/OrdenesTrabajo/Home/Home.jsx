@@ -29,7 +29,7 @@ export default function Home() {
         <h2 className="text-2xl text-black">Ordenes de Trabajo</h2>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Buscar Orden de Trabajo..." />
+        <Search placeholder="Buscar Orden de Trabajo..." />{" "}
         <Link
           to={"/OT/crear"}
           className="flex h-10 items-center rounded-lg bg-mainColor text-black hover:bg-orange-300 px-4 text-sm font-medium  transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
