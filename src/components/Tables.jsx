@@ -29,10 +29,46 @@ import Swal from "sweetalert2";
 import ReactPDF from "@react-pdf/renderer";
 import PDF from "./PDF";
 import { saveAs } from "file-saver";
+import Caret from "./Caret";
 
 export function TablaOT({ limit, currentPage, query }) {
   const [OT, setOT] = useState(null);
   const [update, setUpdate] = useState(false);
+  const [sort, setSort] = useState({
+    field: "ot.orden_trabajo_id",
+    order: "des",
+  });
+
+  const headers = [
+    { label: "Cod. OT", field: "orden_trabajo_id" },
+    { label: "Cliente", field: "cliente" },
+    { label: "FPE", field: "fecha_probable_entrega" },
+    { label: "Prioridad", field: "prioridad" },
+    { label: "Fecha Creación", field: "fecha_creacion" },
+    { label: "Estado", field: "estado" },
+    // Agrega más headers según sea necesario
+  ];
+  function handleHeaderClick(field) {
+    // Cambia el orden de "asc" a "des" o viceversa
+    const newOrder =
+      sort.field === field && sort.order === "asc" ? "des" : "asc";
+    setSort({ field, order: newOrder });
+
+    // Aquí puedes hacer una solicitud a la API para obtener los datos ordenados o filtrar localmente
+    console.log(`Ordenar por: ${field}, Orden: ${newOrder}`);
+  }
+
+  function getSortedArray(array) {
+    return array.sort((a, b) => {
+      const fieldA = a[sort.field];
+      const fieldB = b[sort.field];
+      if (sort.order === "asc") {
+        return fieldA > fieldB ? 1 : fieldA < fieldB ? -1 : 0;
+      } else {
+        return fieldA < fieldB ? 1 : fieldA > fieldB ? -1 : 0;
+      }
+    });
+  }
 
   useEffect(() => {
     fetchOrdenesTrabajo(limit, currentPage, query)
@@ -86,7 +122,7 @@ export function TablaOT({ limit, currentPage, query }) {
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
           <div className="md:hidden">
-            {OT?.map((ot) => (
+            {getSortedArray(OT)?.map((ot) => (
               <div
                 key={ot.orden_trabajo_id}
                 className="mb-2 w-full rounded-md bg-color p-4"
@@ -144,27 +180,29 @@ export function TablaOT({ limit, currentPage, query }) {
           <table className="hidden min-w-full text-black md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
-                  Cod. OT
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Cliente
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  FPE
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Prioridad
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Fecha Creación
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
-                </th>
+                {headers.map((header) => (
+                  <th
+                    key={header.field}
+                    scope="col"
+                    className="px-3 py-5 font-medium sm:pl-6 cursor-pointer"
+                    onClick={() => handleHeaderClick(header.field)}
+                  >
+                    <div className="flex items-center">
+                      {header.label}
+                      {header.field === sort.field && (
+                        <Caret
+                          direction={
+                            sort.field === header.field
+                              ? sort.order === "asc"
+                                ? "up"
+                                : "down"
+                              : "up"
+                          }
+                        />
+                      )}
+                    </div>
+                  </th>
+                ))}
                 <th scope="col" className="px-3 py-5 font-medium">
                   {/* Temp */}
                 </th>
@@ -176,6 +214,7 @@ export function TablaOT({ limit, currentPage, query }) {
                 </th>
               </tr>
             </thead>
+            <tbody>{/* Renderiza las filas de la tabla aquí */}</tbody>
             <tbody className="bg-color">
               {OT?.map((ot) => (
                 <tr
@@ -212,7 +251,7 @@ export function TablaOT({ limit, currentPage, query }) {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3"></td>
+
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   {/*Estos están para ser futuros nuevos campos*/}
@@ -659,6 +698,7 @@ export function TablaTalles({ limit, currentPage, update, setUpdate }) {
 
   {
     /* TENGO QUE ESTABLECER UN LIMITE DE 5 CARACTERES O SE CAE TODO */
+    /*esta nota está desactualizada, aumente el limite a 50, pero poner el limite acá no estaría mal*/
   }
   const handleEdit = (id) => {
     fetchTalle(id)
