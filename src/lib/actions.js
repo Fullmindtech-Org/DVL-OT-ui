@@ -299,3 +299,85 @@ export async function eliminarTalle(id, setUpdate, update) {
     showToast("error", "Error al eliminar el talle", "dark");
   }
 }
+
+export async function uploadFileToServer(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch(`${url}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al subir el archivo");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error en la subida:", error);
+    throw error;
+  }
+}
+
+export async function guardarCliente(cliente, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/clientes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cliente),
+    });
+
+    if (response.status === 201) {
+      showToast("success", "Cliente guardado con éxito", "dark");
+      setUpdate(!update);
+    } else {
+      const data = await response.json();
+      showToast("error", data.error, "dark");
+    }
+  } catch (error) {
+    showToast("error", error, "dark");
+  }
+}
+
+export async function modificarCliente(cliente, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/clientes/${cliente.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cliente),
+    });
+
+    if (response.status === 200) {
+      showToast("success", "Cliente modificado con éxito", "dark");
+      setUpdate(!update);
+    } else {
+      const data = await response.json();
+      showToast("error", data.error, "dark");
+    }
+  } catch (error) {
+    showToast("error", "Error al modificar el cliente", "dark");
+  }
+}
+
+export async function eliminarCliente(id, setUpdate, update) {
+  try {
+    const response = await fetch(`${url}/clientes/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.status === 200) {
+      setUpdate(!update);
+    } else {
+      showToast("error", "Error al eliminar el cliente", "dark");
+    }
+  } catch (error) {
+    showToast("error", "Error al eliminar el cliente", "dark");
+  }
+}

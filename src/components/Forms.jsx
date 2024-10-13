@@ -12,6 +12,8 @@ import { guardarOrdenTrabajo, modificarOrdenTrabajo } from "../lib/actions";
 import PropTypes from "prop-types";
 import { showToast } from "../lib/utils";
 import React from "react";
+import UploadButton from "./UploadButton";
+import SearchClientes from "./SearchClientes";
 
 export function FormOT({ mode, otId }) {
   const {
@@ -20,7 +22,9 @@ export function FormOT({ mode, otId }) {
     formState: { errors },
     setValue,
     control,
+    watch,
   } = useForm();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "pedidos",
@@ -36,6 +40,8 @@ export function FormOT({ mode, otId }) {
   const today = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data) => {
+    console.log(data);
+
     if (mode === "update") {
       await modificarOrdenTrabajo(otId, data);
     } else {
@@ -48,13 +54,17 @@ export function FormOT({ mode, otId }) {
       if (mode === "update" && otId) {
         try {
           const ot = await fetchOrdenTrabajo(otId);
+          console.log(ot);
+
           const fechaCreacionFormatted = ot.fecha_creacion.split("T")[0];
           const fechaProbableEntregaFormatted =
             ot.fecha_probable_entrega.split("T")[0];
 
+          setValue("estado_nombre", ot.estado_id);
+          setValue("comentario_falta_material", ot.comentario_falta_material);
           setValue("fecha", fechaCreacionFormatted);
           setValue("fecha_probable_entrega", fechaProbableEntregaFormatted);
-          setValue("cliente", ot.cliente);
+          setValue("cliente_id", ot.cliente_id);
           setValue("prioridad", ot.prioridad);
           remove();
 
@@ -114,6 +124,10 @@ export function FormOT({ mode, otId }) {
     }
   }, []);
 
+  const handleSelectClient = (clientId) => {
+    setValue("cliente_id", clientId);
+  };
+
   return (
     <div>
       <form
@@ -155,17 +169,14 @@ export function FormOT({ mode, otId }) {
           </div>
         </div>
         <div className="flex flex-col justify-center items-start">
-          <span className="text-zinc-600 text-xs mb-1">Cliente</span>
-          <input
-            id="cliente"
-            type="text"
-            placeholder="Nombre del cliente..."
-            defaultValue=""
-            {...register("cliente", { required: true })}
-            className="py-[12px] px-[20px] w-full rounded-lg"
+          <label className="text-zinc-600 text-xs mb-1">Cliente</label>
+          <SearchClientes
+            onSelect={handleSelectClient}
+            initialId={watch("cliente_id")}
+            className="w-full"
           />
           {errors.cliente && (
-            <span className="text-red-500 text-xs italic">
+            <span className="text-red-500 text-xs italic ">
               Este campo es obligatorio
             </span>
           )}
@@ -191,6 +202,32 @@ export function FormOT({ mode, otId }) {
             </span>
           )}
         </div>
+        <div className="flex flex-col justify-center items-start">
+          <span className="text-zinc-600 text-xs mb-1">Estado del Lote</span>
+          <select
+            id="estado_nombre"
+            {...register("estado_nombre", { required: true })}
+            className="py-[12px] px-[20px] w-full rounded-lg"
+          >
+            <option value="1">Iniciado</option>
+            <option value="2">Parcial x falta de material</option>
+            <option value="3">Finalizada</option>
+            <option value="4">Cancelada</option>
+          </select>
+        </div>
+        {watch("estado_nombre") === 2 && (
+          <div className="flex flex-col justify-center items-start">
+            <span className="text-zinc-600 text-xs mb-1">
+              Observaciones: Falta de Material
+            </span>
+            <textarea
+              id="comentario_falta_material"
+              {...register("comentario_falta_material")}
+              className="py-[12px] px-[20px] w-full rounded-lg"
+              placeholder="Especificar qué falta..."
+            />
+          </div>
+        )}
 
         {/* acá empiezo a cambiar*/}
         <div>
