@@ -48,7 +48,6 @@ export default function Home() {
 
     try {
       const columnValues = await readFirstColumnStream(file);
-      console.log("Column values", columnValues);
 
       for (const value of columnValues) {
         if (value) {
