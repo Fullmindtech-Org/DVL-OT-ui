@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  fetchCliente,
+  fetchClientes,
   fetchColor,
   fetchColores,
   fetchOrdenTrabajo,
@@ -15,11 +17,13 @@ import { showToast } from "../lib/utils";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
+  eliminarCliente,
   eliminarColor,
   eliminarOrdenTrabajo,
   eliminarPrenda,
   eliminarTalle,
   eliminarTela,
+  modificarCliente,
   modificarColor,
   modificarPrenda,
   modificarTalle,
@@ -29,10 +33,31 @@ import Swal from "sweetalert2";
 import ReactPDF from "@react-pdf/renderer";
 import PDF from "./PDF";
 import { saveAs } from "file-saver";
+import Caret from "./Caret";
 
 export function TablaOT({ limit, currentPage, query }) {
   const [OT, setOT] = useState(null);
   const [update, setUpdate] = useState(false);
+  const [sort, setSort] = useState({
+    label: "Cod. OT",
+    field: "orden_trabajo_id",
+    order: "des",
+  });
+
+  const headers = [
+    { label: "Cod. OT", field: "orden_trabajo_id" },
+    { label: "Cliente", field: "cliente" },
+    { label: "FPE", field: "fecha_probable_entrega" },
+    { label: "Prioridad", field: "prioridad" },
+    { label: "Fecha Creación", field: "fecha_creacion" },
+    { label: "Estado", field: "estado" },
+    // Agrega más headers según sea necesario
+  ];
+  function handleHeaderClick(field) {
+    const newOrder =
+      sort.field === field && sort.order === "asc" ? "des" : "asc";
+    setSort({ field, order: newOrder });
+  }
 
   useEffect(() => {
     fetchOrdenesTrabajo(limit, currentPage, query)
@@ -52,6 +77,19 @@ export function TablaOT({ limit, currentPage, query }) {
         showToast("error", error, "dark");
       });
   }, [limit, currentPage, query, update]);
+
+  function getSortedArray(array) {
+    if (!array) return [];
+    return array.sort((a, b) => {
+      const fieldA = a[sort.field];
+      const fieldB = b[sort.field];
+      if (sort.order === "asc") {
+        return fieldA > fieldB ? 1 : fieldA < fieldB ? -1 : 0;
+      } else {
+        return fieldA < fieldB ? 1 : fieldA > fieldB ? -1 : 0;
+      }
+    });
+  }
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -86,7 +124,7 @@ export function TablaOT({ limit, currentPage, query }) {
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
           <div className="md:hidden">
-            {OT?.map((ot) => (
+            {getSortedArray(OT)?.map((ot) => (
               <div
                 key={ot.orden_trabajo_id}
                 className="mb-2 w-full rounded-md bg-color p-4"
@@ -144,27 +182,29 @@ export function TablaOT({ limit, currentPage, query }) {
           <table className="hidden min-w-full text-black md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
-                  Cod. OT
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Cliente
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  FPE
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Prioridad
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Fecha Creación
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  {/* Temp */}
-                </th>
+                {headers.map((header) => (
+                  <th
+                    key={header.field}
+                    scope="col"
+                    className="px-3 py-5 font-medium sm:pl-6 cursor-pointer"
+                    onClick={() => handleHeaderClick(header.field)}
+                  >
+                    <div className="flex items-center">
+                      {header.label}
+                      {header.field === sort.field && (
+                        <Caret
+                          direction={
+                            sort.field === header.field
+                              ? sort.order === "asc"
+                                ? "up"
+                                : "down"
+                              : "up"
+                          }
+                        />
+                      )}
+                    </div>
+                  </th>
+                ))}
                 <th scope="col" className="px-3 py-5 font-medium">
                   {/* Temp */}
                 </th>
@@ -176,6 +216,7 @@ export function TablaOT({ limit, currentPage, query }) {
                 </th>
               </tr>
             </thead>
+            <tbody>{/* Renderiza las filas de la tabla aquí */}</tbody>
             <tbody className="bg-color">
               {OT?.map((ot) => (
                 <tr
@@ -212,8 +253,8 @@ export function TablaOT({ limit, currentPage, query }) {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3"></td>
-                  <td className="whitespace-nowrap px-3 py-3"></td>
+
+                  <td className="whitespace-nowrap px-3 py-3">{ot.estado}</td>
                   <td className="whitespace-nowrap px-3 py-3"></td>
                   {/*Estos están para ser futuros nuevos campos*/}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -635,6 +676,133 @@ export function TablaTelas({ limit, currentPage, update, setUpdate }) {
   );
 }
 
+export function TablaClientes({ limit, currentPage, update, setUpdate }) {
+  const [clientes, setClientes] = useState(null);
+
+  useEffect(() => {
+    fetchClientes(limit, currentPage)
+      .then((data) => {
+        if (data && data.rows) {
+          setClientes(data.rows);
+        } else {
+          showToast(
+            "error",
+            "Error al obtener los datos, recargue la página",
+            "dark"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        showToast("error", error.message, "dark");
+      });
+  }, [limit, currentPage, update]);
+
+  const handleEdit = (id) => {
+    fetchCliente(id)
+      .then((data) => {
+        const nombreActualDeCliente = data[0].Cliente;
+
+        Swal.fire({
+          title: `Actualizar el nombre del Cliente`,
+          input: "text",
+          inputValue: nombreActualDeCliente,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: (nuevoNombre) => {
+            return modificarCliente(
+              { id: id, Cliente: nuevoNombre },
+              setUpdate,
+              update
+            );
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
+      })
+      .catch((error) => {
+        showToast("error", error.message, "dark");
+      });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarCliente(id, setUpdate, update).then(() => {
+          Swal.fire("Borrado!", "El cliente ha sido eliminado.", "success");
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
+          <table className="min-w-full text-black">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+                  Código Cliente
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Cliente
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-color">
+              {clientes?.map((cliente) => (
+                <tr
+                  key={cliente.id}
+                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    {cliente.id}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {cliente.Cliente}{" "}
+                    {/* Asegúrate de usar 'Cliente' y no 'cliente' */}
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleEdit(cliente.id)}
+                      >
+                        <i className="ri-pencil-line text-xl" />
+                      </button>
+                      <button
+                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                        onClick={() => handleDelete(cliente.id)}
+                      >
+                        <i className="ri-delete-bin-line text-xl" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function TablaTalles({ limit, currentPage, update, setUpdate }) {
   const [talles, setTalles] = useState(null);
 
@@ -657,9 +825,6 @@ export function TablaTalles({ limit, currentPage, update, setUpdate }) {
       });
   }, [limit, currentPage, update]);
 
-  {
-    /* TENGO QUE ESTABLECER UN LIMITE DE 5 CARACTERES O SE CAE TODO */
-  }
   const handleEdit = (id) => {
     fetchTalle(id)
       .then((data) => {
@@ -772,6 +937,13 @@ TablaTalles.propTypes = {
 };
 
 TablaTelas.propTypes = {
+  limit: PropTypes.number,
+  currentPage: PropTypes.number,
+  update: PropTypes.bool,
+  setUpdate: PropTypes.func,
+};
+
+TablaClientes.propTypes = {
   limit: PropTypes.number,
   currentPage: PropTypes.number,
   update: PropTypes.bool,

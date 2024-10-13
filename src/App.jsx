@@ -6,6 +6,7 @@ import Colores from "./pages/Colores/Colores";
 import Prendas from "./pages/Prendas/Prendas";
 import Telas from "./pages/Telas/Telas";
 import Talles from "./pages/Talles/Talles";
+import Clientes from "./pages/Clientes/Clientes";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
                 >
                   <Routes>
                     <Route path="/*" element={<OrdenesTrabajo />} />
+                    <Route path="/clientes/*" element={<Clientes />} />
                     <Route path="/colores/*" element={<Colores />} />
                     <Route path="/prendas/*" element={<Prendas />} />
                     <Route path="/telas/*" element={<Telas />} />

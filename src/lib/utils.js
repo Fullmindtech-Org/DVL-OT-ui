@@ -1,4 +1,5 @@
 import { toast, Bounce } from "react-toastify";
+import ExcelJS from "exceljs";
 
 export function generatePagination(currentPage, totalPages) {
   if (totalPages <= 7) {
@@ -49,4 +50,17 @@ export function showToast(type, message) {
   } else if (type === "error") {
     toast.error(message, toastOptions);
   }
+}
+
+export async function readFirstColumnStream(file) {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(file);
+  const worksheet = workbook.getWorksheet(1); // Obtener la primera hoja
+
+  const columnValues = [];
+  worksheet.eachRow((row) => {
+    columnValues.push(row.getCell(1).value); // Obtener la primera columna
+  });
+
+  return columnValues;
 }

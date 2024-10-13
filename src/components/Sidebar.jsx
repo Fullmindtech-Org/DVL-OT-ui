@@ -2,14 +2,17 @@ import { Link, useLocation } from "react-router-dom";
 
 const links = [
   { name: "Ordenes de Trabajo", path: "/", icon: "ri-list-unordered" },
+  { name: "Clientes", path: "/clientes", icon: "ri-user-fill" },
   {
     name: "Colores",
     path: "/colores",
     icon: "ri-pantone-line",
   },
   { name: "Prendas", path: "/prendas", icon: "ri-shirt-line" },
-  { name: "Telas", path: "/telas", icon: "ri-file-paper-2-line" },
+  { name: "Telas", path: "/telas", icon: "ri-image-edit-line" },
   { name: "Talles", path: "/talles", icon: "ri-hashtag" },
+  // { name: "Imagenes", path: "/imagenes", icon: "ri-image-line" },
+  // { name: "Pedidos", path: "/pedidos", icon: "ri-shopping-cart-2-line" },
   // { name: "Cintas", path: "/cintas", icon: "ri-bookmark-line" },
 ];
 

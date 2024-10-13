@@ -156,3 +156,34 @@ export async function fetchTalle(id) {
     console.error("Error fetching data", error);
   }
 }
+
+export async function fetchClientes(limit, page) {
+  const params = { limit, page };
+  const query = new URLSearchParams(params).toString();
+
+  const urlFetch = `${url}/clientes?${query}`;
+  try {
+    const response = await fetch(urlFetch);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos de los clientes");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+  }
+}
+
+export async function fetchCliente(id) {
+  const urlFetch = `${url}/clientes/${id}`;
+  try {
+    const response = await fetch(urlFetch);
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos del cliente");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+  }
+}
