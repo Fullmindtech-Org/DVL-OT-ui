@@ -1,6 +1,5 @@
 import { showToast } from "./utils.js";
-
-const url = "http://localhost:8080/api";
+const url = import.meta.env.VITE_REACT_APP_URL_API;
 
 export async function guardarOrdenTrabajo(ordenTrabajo) {
   try {
