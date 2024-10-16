@@ -215,7 +215,7 @@ export function FormOT({ mode, otId }) {
             <option value="4">Cancelada</option>
           </select>
         </div>
-        {watch("estado_nombre") == 2 && (
+        {watch("estado_nombre")?.toString() === "2" && (
           <div className="flex flex-col justify-center items-start">
             <span className="text-zinc-600 text-xs mb-1">
               Observaciones: Falta de Material

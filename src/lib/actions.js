@@ -1,6 +1,5 @@
 import { showToast } from "./utils.js";
-
-const url = "http://localhost:8080/api";
+import { url } from "./data.js";
 
 export async function guardarOrdenTrabajo(ordenTrabajo) {
   try {
