@@ -332,7 +332,6 @@ export async function guardarCliente(cliente, setUpdate, update) {
     });
 
     if (response.status === 201) {
-      showToast("success", "Cliente guardado con éxito", "dark");
       setUpdate(!update);
     } else {
       const data = await response.json();
