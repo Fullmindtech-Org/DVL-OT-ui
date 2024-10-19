@@ -71,7 +71,8 @@ export default function Home() {
       <div className="flex w-full items-center justify-between">
         <h2 className="text-2xl text-black">Clientes</h2>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+
+      <div className="mt-4 flex items-center mr-3 gap-2 md:mt-8">
         <button
           onClick={() => handleCreate()}
           className="flex h-10 items-center rounded-lg bg-mainColor text-black hover:bg-orange-300 px-4 text-sm font-medium  transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -79,9 +80,7 @@ export default function Home() {
           <span className="hidden md:block">Crear Cliente</span>
           <i className="ri-add-fill md:ml-4 text-2xl" />
         </button>
-      </div>
-      {/* Input y botón para importar archivo Excel */}
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+
         <label className="flex h-10 items-center rounded-lg bg-mainColor text-black hover:bg-orange-300 px-4 text-sm font-medium  transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
           <span className=" hidden md:block">Importar .xlsx</span>
           <i className="ri-file-upload-fill md:ml-4 text-2xl" />
@@ -93,6 +92,7 @@ export default function Home() {
           />
         </label>
       </div>
+
       <TablaClientes
         limit={limit}
         currentPage={Number(page)}

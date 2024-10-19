@@ -747,58 +747,49 @@ export function TablaClientes({ limit, currentPage, update, setUpdate }) {
   };
 
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-zinc-300 text-black p-2 md:pt-0">
-          <table className="min-w-full text-black">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
-                  Código Cliente
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Cliente
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  <span className="sr-only">Acciones</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-color">
-              {clientes?.map((cliente) => (
-                <tr
-                  key={cliente.id}
-                  className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {cliente.id}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {cliente.Cliente}{" "}
-                    {/* Asegúrate de usar 'Cliente' y no 'cliente' */}
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
-                        onClick={() => handleEdit(cliente.id)}
-                      >
-                        <i className="ri-pencil-line text-xl" />
-                      </button>
-                      <button
-                        className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
-                        onClick={() => handleDelete(cliente.id)}
-                      >
-                        <i className="ri-delete-bin-line text-xl" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-black">
+        <thead className="rounded-lg text-left text-sm font-normal">
+          <tr>
+            <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
+              Código Cliente
+            </th>
+            <th scope="col" className="px-3 py-5 font-medium">
+              Cliente
+            </th>
+            <th scope="col" className="px-3 py-5 font-medium">
+              <span className="sr-only">Acciones</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-color">
+          {clientes?.map((cliente) => (
+            <tr
+              key={cliente.id}
+              className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+            >
+              <td className="whitespace-nowrap py-3 pl-6 pr-3">{cliente.id}</td>
+              <td className="whitespace-nowrap px-3 py-3">{cliente.Cliente}</td>
+              <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                <div className="flex flex-col md:flex-row md:justify-end gap-2">
+                  <button
+                    className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                    onClick={() => handleEdit(cliente.id)}
+                  >
+                    <i className="ri-pencil-line text-xl" />
+                  </button>
+                  <button
+                    className="rounded-md border p-2 hover:bg-mainColor text-black border-zinc-300"
+                    onClick={() => handleDelete(cliente.id)}
+                  >
+                    <i className="ri-delete-bin-line text-xl" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
