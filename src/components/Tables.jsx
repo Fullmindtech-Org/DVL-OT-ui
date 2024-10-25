@@ -132,7 +132,7 @@ export function TablaOT({ limit, currentPage, query }) {
                 <div className="flex items-center justify-between border-b border-zinc-300 pb-2">
                   <div>
                     <p>{ot.orden_trabajo_id}</p>
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center overflow-hidden">
                       <p>{ot.cliente}</p>
                       <p className="mx-2">-</p>
                       <p>
@@ -226,7 +226,9 @@ export function TablaOT({ limit, currentPage, query }) {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     {ot.orden_trabajo_id}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">{ot.cliente}</td>
+                  <td className="max-w-xs truncate overflow-hidden whitespace-nowrap px-3 py-3">
+                    {ot.cliente}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {new Date(ot.fecha_probable_entrega).toLocaleDateString()}
                   </td>
@@ -748,7 +750,7 @@ export function TablaClientes({ limit, currentPage, update, setUpdate }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full text-black">
+      <table className="min-w-full text-black overflow-hidden">
         <thead className="rounded-lg text-left text-sm font-normal">
           <tr>
             <th scope="col" className="px-3 py-5 font-medium sm:pl-6">
@@ -762,11 +764,11 @@ export function TablaClientes({ limit, currentPage, update, setUpdate }) {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-color">
+        <tbody className="bg-color max-w-full">
           {clientes?.map((cliente) => (
             <tr
               key={cliente.id}
-              className="w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+              className="text-ellipsis max-w-full border-b py-3 text-sm border-zinc-300 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">{cliente.id}</td>
               <td className="whitespace-nowrap px-3 py-3">{cliente.Cliente}</td>
