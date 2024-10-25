@@ -24,7 +24,7 @@ export default function Home() {
   }, [limit, page, query]);
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-auto">
       <div className="flex w-full items-center justify-between">
         <h2 className="text-2xl text-black">Ordenes de Trabajo</h2>
       </div>
