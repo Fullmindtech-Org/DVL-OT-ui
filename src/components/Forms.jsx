@@ -7,7 +7,7 @@ import {
   fetchTalles,
   fetchTelas,
 } from "../lib/data";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { guardarOrdenTrabajo, modificarOrdenTrabajo } from "../lib/actions";
 import PropTypes from "prop-types";
 import { showToast } from "../lib/utils";
@@ -39,13 +39,22 @@ export function FormOT({ mode, otId }) {
   const hasFetchedTalles = useRef(false);
   const today = new Date().toISOString().split("T")[0];
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const navigate = useNavigate();
 
-    if (mode === "update") {
-      await modificarOrdenTrabajo(otId, data);
-    } else {
-      await guardarOrdenTrabajo(data);
+  const onSubmit = async (data) => {
+    try {
+      let response;
+      if (mode === "update") {
+        response = await modificarOrdenTrabajo(otId, data);
+      } else {
+        response = await guardarOrdenTrabajo(data);
+      }
+
+      if (response.status === (mode === "update" ? 200 : 201)) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error en la operación:", error);
     }
   };
 

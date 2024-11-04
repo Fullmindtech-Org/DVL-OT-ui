@@ -21,6 +21,7 @@ export async function guardarOrdenTrabajo(ordenTrabajo) {
     } else {
       showToast("error", "Error al guardar la orden de trabajo", "dark");
     }
+    return response;
   } catch (error) {
     showToast("error", "Error al guardar la orden de trabajo", "dark");
   }
@@ -41,6 +42,7 @@ export async function modificarOrdenTrabajo(id, ordenTrabajo) {
     } else {
       showToast("error", "Error al modificar la orden de trabajo", "dark");
     }
+    return response;
   } catch (error) {
     showToast("error", "Error al modificar la orden de trabajo", "dark");
   }
