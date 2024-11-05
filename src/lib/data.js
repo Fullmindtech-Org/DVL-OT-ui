@@ -1,7 +1,5 @@
 const url = import.meta.env.VITE_REACT_APP_URL_API;
 
-console.log(url);
-
 export async function fetchOrdenesTrabajo(limit, page, query) {
   const params = { limit, page, ...(query && { query }) };
   const queryString = new URLSearchParams(params).toString();

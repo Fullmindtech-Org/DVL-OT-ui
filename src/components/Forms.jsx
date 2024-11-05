@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
+  fetchCliente,
   fetchColores,
   fetchOrdenTrabajo,
   fetchPrendas,
@@ -23,6 +24,8 @@ export function FormOT({ mode, otId }) {
     setValue,
     control,
     watch,
+    setError,
+    clearErrors,
   } = useForm();
 
   const { fields, append, remove } = useFieldArray({
@@ -33,6 +36,7 @@ export function FormOT({ mode, otId }) {
   const [colores, setColores] = useState([]);
   const [telas, setTelas] = useState([]);
   const [talles, setTalles] = useState([]);
+  const [isValidSelection, setIsValidSelection] = useState(false);
   const hasFetchedPrendas = useRef(false);
   const hasFetchedColores = useRef(false);
   const hasFetchedTelas = useRef(false);
@@ -42,7 +46,26 @@ export function FormOT({ mode, otId }) {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    if (!isValidSelection) {
+      setError("cliente_id", {
+        type: "manual",
+        message: "Debe seleccionar un cliente válido.",
+      });
+      return;
+    }
     try {
+      const clienteId = data.cliente_id;
+      const cliente = await fetchCliente(clienteId);
+
+      if (!cliente) {
+        setError("cliente_id", {
+          type: "manual",
+          message: "Cliente no válido. Seleccione un cliente existente.",
+        });
+        return;
+      } else {
+        clearErrors("cliente_id");
+      }
       let response;
       if (mode === "update") {
         response = await modificarOrdenTrabajo(otId, data);
@@ -63,7 +86,6 @@ export function FormOT({ mode, otId }) {
       if (mode === "update" && otId) {
         try {
           const ot = await fetchOrdenTrabajo(otId);
-          console.log(ot);
 
           const fechaCreacionFormatted = ot.fecha_creacion.split("T")[0];
           const fechaProbableEntregaFormatted =
@@ -75,6 +97,7 @@ export function FormOT({ mode, otId }) {
           setValue("fecha_probable_entrega", fechaProbableEntregaFormatted);
           setValue("cliente_id", ot.cliente_id);
           setValue("prioridad", ot.prioridad);
+          setValue("nro_pedido", ot.nro_pedido);
           remove();
 
           ot.pedidos.forEach((pedido) => {
@@ -135,6 +158,10 @@ export function FormOT({ mode, otId }) {
 
   const handleSelectClient = (clientId) => {
     setValue("cliente_id", clientId);
+    if (clientId) {
+      setIsValidSelection(true);
+      clearErrors("cliente_id"); // Limpiar error al seleccionar un cliente válido
+    }
   };
 
   return (
@@ -182,34 +209,52 @@ export function FormOT({ mode, otId }) {
           <SearchClientes
             onSelect={handleSelectClient}
             initialId={watch("cliente_id")}
+            setIsValidSelection={setIsValidSelection}
+            isValidSelection={isValidSelection}
             className="w-full"
           />
-          {errors.cliente && (
-            <span className="text-red-500 text-xs italic ">
-              Este campo es obligatorio
+          {errors.cliente_id && (
+            <span className="text-red-500 text-xs italic">
+              {errors.cliente_id.message}
             </span>
           )}
         </div>
-        <div className="flex flex-col justify-center items-start">
-          <span className="text-zinc-600 text-xs mb-1">Prioridad</span>
-          <select
-            id="prioridad"
-            defaultValue=""
-            {...register("prioridad", { required: true })}
-            className="py-[12px] px-[20px] w-full rounded-lg"
-          >
-            <option value="" disabled>
-              Seleccione una opción...
-            </option>
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
-          </select>
-          {errors.prioridad && (
-            <span className="text-red-500 text-xs italic">
-              Este campo es obligatorio
-            </span>
-          )}
+        <div className="grid grid-cols-2 gap-2 items-start">
+          <div className="flex flex-col justify-center items-start">
+            <span className="text-zinc-600 text-xs mb-1">Prioridad</span>
+            <select
+              id="prioridad"
+              defaultValue=""
+              {...register("prioridad", { required: true })}
+              className="py-[12px] px-[20px] w-full rounded-lg"
+            >
+              <option value="" disabled>
+                Seleccione una opción...
+              </option>
+              <option value="Baja">Baja</option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+            </select>
+            {errors.prioridad && (
+              <span className="text-red-500 text-xs italic">
+                Este campo es obligatorio
+              </span>
+            )}
+          </div>
+          <div className="flex flex-col justify-center items-start">
+            <span className="text-zinc-600 text-xs mb-1">Nro Pedido</span>
+            <input
+              id="nro_pedido"
+              type="text"
+              {...register("nro_pedido", { required: true })}
+              className="py-[12px] px-[20px] w-full rounded-lg"
+            />
+            {errors.nro_pedido && (
+              <span className="text-red-500 text-xs italic">
+                Este campo es obligatorio
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex flex-col justify-center items-start">
           <span className="text-zinc-600 text-xs mb-1">Estado del Lote</span>
@@ -237,8 +282,6 @@ export function FormOT({ mode, otId }) {
             />
           </div>
         )}
-
-        {/* acá empiezo a cambiar*/}
         <div>
           {/*columnas*/}
           <div className="grid grid-cols-10 gap-2 items-center bg-zinc-200 p-2 rounded-lg">

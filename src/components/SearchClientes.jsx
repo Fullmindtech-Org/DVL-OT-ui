@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fetchClientes } from "../lib/data";
 
-const SearchClientes = ({ onSelect, initialId }) => {
+const SearchClientes = ({ onSelect, initialId, setIsValidSelection }) => {
   const [filteredClients, setFilteredClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClient, setSelectedClient] = useState(null);
@@ -13,9 +13,9 @@ const SearchClientes = ({ onSelect, initialId }) => {
         try {
           const data = await fetchClientes(1000, 1);
           const client = data.rows.find((client) => client.id === initialId);
-
           if (client) {
             setSelectedClient(client);
+            setIsValidSelection(true);
             inputRef.current.value = client.Cliente;
           }
         } catch (error) {
@@ -23,13 +23,18 @@ const SearchClientes = ({ onSelect, initialId }) => {
         }
       }
     };
-
     fetchAndSetInitialClient();
-  }, [initialId]);
+  }, [initialId, setIsValidSelection]);
 
   const handleInputChange = async () => {
     const inputValue = inputRef.current.value.toLowerCase();
     setSearchTerm(inputValue);
+
+    if (selectedClient && selectedClient.Cliente.toLowerCase() === inputValue) {
+      setIsValidSelection(true);
+    } else {
+      setIsValidSelection(false);
+    }
 
     if (inputValue === "") {
       setFilteredClients([]);
@@ -39,7 +44,6 @@ const SearchClientes = ({ onSelect, initialId }) => {
     try {
       const data = await fetchClientes(1000, 1);
       const regex = new RegExp(inputValue, "i");
-
       const filtered = data.rows.filter((client) => regex.test(client.Cliente));
       setFilteredClients(filtered);
     } catch (error) {
@@ -51,6 +55,7 @@ const SearchClientes = ({ onSelect, initialId }) => {
     inputRef.current.value = client.Cliente;
     setFilteredClients([]);
     setSelectedClient(client);
+    setIsValidSelection(true);
     onSelect(client.id);
   };
 
@@ -59,9 +64,11 @@ const SearchClientes = ({ onSelect, initialId }) => {
       <input
         type="search"
         ref={inputRef}
-        placeholder="Buscar cliente..."
+        placeholder={
+          selectedClient ? selectedClient.Cliente : "Buscar cliente..."
+        }
         onChange={handleInputChange}
-        className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-mainColor"
+        className={`w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-mainColor`}
       />
       {filteredClients.length > 0 && (
         <ul className="absolute bg-white border border-gray-300 rounded-lg w-full max-h-52 overflow-y-auto shadow-lg z-10">
